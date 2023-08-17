@@ -22,6 +22,44 @@
                     </RassonItem>
                 </div>
             </section>
+            <section class="TrailSection">
+                <h1>Explore nossos Destaques</h1>
+                <div class="HighlightsContainer">
+                    <div class="fullStack">
+                        <Highlight :img="rocket">
+                            <template #title>Trilha de Desenvolvimento Web Full Stack:</template>
+                            <template #desc>
+                                Domine o front-end e o back-end, criando aplicativos web completos e dinâmicos.
+                            </template>
+                        </Highlight>
+                    </div>
+                    <div class="mobile">
+                        <Highlight :img="smartphone">
+                            <template #title>Desenvolvimento de Aplicativos Móveis:</template>
+                            <template #desc>
+                                Entre no mundo dos apps, construindo interfaces intuitivas e funcionais para dispositivos
+                                móveis
+                            </template>
+                        </Highlight>
+                    </div>
+                    <div class="ai">
+                        <Highlight :img="ai">
+                            <template #title>Inteligência Artificial e Machine Learning::</template>
+                            <template #desc>
+                                Descubra como ensinar máquinas a aprender e tomar decisões inteligentes.
+                            </template>
+                        </Highlight>
+                    </div>
+                    <div class="iot">
+                        <Highlight :img="iot">
+                            <template #title> Internet das Coisas (IoT):</template>
+                            <template #desc>
+                                Conecte o mundo físico ao digital, criando dispositivos inteligentes e interativos.
+                            </template>
+                        </Highlight>
+                    </div>
+                </div>
+            </section>
 
         </div>
     </NuxtLayout>
@@ -32,6 +70,10 @@ import clock from '../assets/images/clock.png'
 import diversity from '../assets/images/diversidade.png'
 import commnity from '../assets/images/community.png'
 import certificate from '../assets/images/certificate.png'
+import rocket from '../assets/images/rocket.png'
+import iot from '../assets/images/iot.png'
+import ai from '../assets/images/ai.png'
+import smartphone from '../assets/images/smartphone.png'
 const rassons = ref([
     {
         img: know,
@@ -82,8 +124,7 @@ const rassons = ref([
 }
 
 .HomeContainer>section.SectionRasson {
-    @apply bg-white -mt-16 h-[150vh] rounded-t-[50px] flex flex-col
-     gap-12 items-center justify-start
+    @apply bg-white -mt-16 h-max min-h-[150vh] rounded-t-[50px] flex flex-col gap-12 items-center justify-start
 }
 
 .HomeContainer>section.SectionRasson>h1 {
@@ -92,6 +133,42 @@ const rassons = ref([
 
 .HomeContainer>section.SectionRasson>div {
     @apply w-[70%] flex flex-row gap-24 flex-wrap justify-center
+}
+
+.HomeContainer>section.TrailSection {
+    @apply bg-white h-[150vh] flex flex-col gap-12 items-center justify-start border-t border-black/50
+}
+
+.HomeContainer>section.TrailSection>h1 {
+    @apply text-4xl
+}
+
+.HomeContainer>section.TrailSection>div.HighlightsContainer {
+    @apply w-full h-max flex flex-col gap-4 
+}
+
+
+.HomeContainer>section.TrailSection>div.HighlightsContainer>div {
+    background-size: cover;
+    background-attachment: fixed;
+    @apply w-full h-[70vh] flex items-center justify-center rounded-3xl
+}
+
+.HomeContainer>section.TrailSection>div.HighlightsContainer>div.fullStack {
+    background-image: url('../assets/images/programmingDomination.webp');
+
+}
+
+.HomeContainer>section.TrailSection>div.HighlightsContainer>div.mobile {
+    background-image: url('../assets/images/mobileDomination.webp');
+}
+
+.HomeContainer>section.TrailSection>div.HighlightsContainer>div.ai {
+    background-image: url('../assets/images/aiDomination.webp');
+}
+
+.HomeContainer>section.TrailSection>div.HighlightsContainer>div.iot {
+    background-image: url('../assets/images/iotDomination.webp');
 }
 </style>
   
