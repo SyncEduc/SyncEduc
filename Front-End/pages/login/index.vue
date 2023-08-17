@@ -3,8 +3,8 @@
         <img class="w-full min-h-screen" id="background">
         <h1>Escolha a forma de Login!</h1>
         <div>
-            <SelectLogin option="aluno" :type="1"/>
-            <SelectLogin option="professor" :type="2"/>
+            <SelectLogin option="Aluno(a)" :type="1"/>
+            <SelectLogin option="Professor(a)" :type="2"/>
         </div>
     </div>
 </template>

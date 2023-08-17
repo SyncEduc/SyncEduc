@@ -40,9 +40,10 @@ function redirectTeatcherToSupport(){
 .InputGroup > input{
   @apply pl-4 rounded-full bg-[#595959]/75 border outline-none
   border-[#BEBEBE] h-10 text-white transition-all 
-  focus:border-2 focus:bg-[#373737]
+  focus:border-2 focus:bg-[#373737] 
 }
 .InputGroup > input[type=date]{
+  color-scheme: dark;
   @apply px-4
 }
 .InputGroup > p{
