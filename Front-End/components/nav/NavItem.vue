@@ -9,8 +9,8 @@ const emit = defineEmits(['clickAction'])
 <style scoped>
 .NavItemContainer{
   @apply w-max h-max
-  border-b border-transparent hover:border-white 
-  text-white text-lg
+  border-b-2 border-transparent hover:border-black/75
+  text-black/75 font-bold text-sm
   cursor-pointer transition-all
 }
 </style>

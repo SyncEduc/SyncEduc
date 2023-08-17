@@ -6,6 +6,7 @@
             <SelectLogin option="Aluno(a)" :type="1"/>
             <SelectLogin option="Professor(a)" :type="2"/>
         </div>
+        <BackButton route-back="/"/>
     </div>
 </template>
 

@@ -38,34 +38,34 @@ function redirectTeatcherToSupport(){
 </script>
 
 <style scoped>
+@import url('../assets/css/variables.css');
 .CardContainer{
   @apply w-72 sm:w-96 h-max flex flex-col items-center justify-center p-8 
-  gap-8 rounded-[30px] backdrop-blur-lg bg-[#595959]/50 border border-[#909090]
+  gap-8 rounded-[30px] bg-white/50 backdrop-blur-lg border border-[#909090]
 }
 .CardContainer > img{
-  @apply w-32 h-32 rounded-full
+  @apply w-32 h-32 opacity-75
 }
 .InputGroup{
   @apply w-full h-max flex flex-col gap-2 transition-all
 }
 .InputGroup > input{
-  @apply pl-4 rounded-full bg-[#595959]/75 border outline-none
-  border-[#BEBEBE] h-10 text-white transition-all 
-  focus:border-2 focus:bg-[#373737] 
+  @apply pl-4 rounded-full bg-gray-200/75 border outline-none
+  border-[#BEBEBE] h-10 text-black/75 transition-all 
+  focus:border-2 focus:bg-gray-300
 }
 .InputGroup > input[type=date]{
-  color-scheme: dark;
   @apply px-4
 }
 .InputGroup > p{
-  @apply text-white
+  @apply text-black
 }
 .InputGroup > p > span{
-  @apply text-[#00C2FF] cursor-pointer border-b border-transparent 
-  hover:border-[#00C2FF]
+  @apply text-[#2f8ca9] cursor-pointer border-b border-transparent 
+  hover:border-[#2d9dff]
 }
 .CardContainer > button{
- @apply w-full h-10 rounded-[25px] bg-[#1C1C1C]/75 
+ @apply w-full h-10 rounded-[25px] bg-gray-900/75 
  text-white text-xl hover:scale-105 transition-all
 }
 </style>
