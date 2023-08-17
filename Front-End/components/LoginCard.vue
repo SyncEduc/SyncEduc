@@ -2,10 +2,10 @@
   <div class="CardContainer">
     <img src="../assets/images/logo.png" alt="logo">
     <div class="InputGroup">
-      <input v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
-      <input type="email" name="email" placeholder="Seu email">
-      <input v-show="isRegister" type="date" name="birth" placeholder="Data de nascimento">
-      <input type="password" name="password" placeholder="Sua senha">
+      <input v-model="form.name" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
+      <input v-model="form.email" type="email" name="email" placeholder="Seu email">
+      <input v-model="form.birth" v-show="isRegister" type="date" name="birth" placeholder="Data de nascimento">
+      <input v-model="form.password" type="password" name="password" placeholder="Sua senha">
       <p v-if="route.params.id == 1">
         {{isRegister ? 'Já tem uma conta? ' : 'Ainda não tem uma conta? '}} 
         <span @click="isRegister = !isRegister">{{ isRegister ? 'Fazer login' : 'Registre-se!' }}</span>
@@ -15,12 +15,23 @@
         <span @click="redirectTeatcherToSupport()">Entre em contato com o suporte!</span>
       </p>
     </div>
-    <button>Login</button>
+    <button @click="emit('get-data', form)">{{ !isRegister ? 'Login' : 'Registrar' }}</button>
   </div>
 </template>
 <script setup>
 const isRegister = ref(false)
 const route = useRoute()
+
+const form = ref({
+  name: "",
+  email:"",
+  birth: "",
+  password: "",
+  isRegister: isRegister.value
+})
+
+const emit = defineEmits(['get-data'])
+
 function redirectTeatcherToSupport(){
   window.location.href = 'mailto:synceduc@gmail.com'
 }
@@ -32,7 +43,7 @@ function redirectTeatcherToSupport(){
   gap-8 rounded-[30px] backdrop-blur-lg bg-[#595959]/50 border border-[#909090]
 }
 .CardContainer > img{
-  @apply w-40 h-40 rounded-full
+  @apply w-32 h-32 rounded-full
 }
 .InputGroup{
   @apply w-full h-max flex flex-col gap-2 transition-all

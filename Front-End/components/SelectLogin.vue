@@ -1,7 +1,7 @@
 <template>
     <div class="SelectLoginContainer" @click="getClickByOption">
         <img v-if="props.type == 1" src="../assets/images/student.png">
-        <img v-else src="../assets/images/teatcher.png">
+        <img v-else src="../assets/images/teacher.png">
         <span>{{ props.option }}</span>
     </div>
 </template>

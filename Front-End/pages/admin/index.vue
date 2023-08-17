@@ -1,11 +1,13 @@
 <template>
   <div class="adminContainer">
     <BackButton route-back="/login"/>
-    <LoginCard/>
+    <LoginCard @get-data="getData"/>
   </div>
 </template>
 <script setup>
-
+function getData(form){
+  console.log(form)
+}
 </script>
 <style scoped>
 .adminContainer{

@@ -1,11 +1,14 @@
 <template>
     <div class="loginScreenContainer" :id="route.params.id == 1 ? 'student' : 'teatcher'">
         <BackButton route-back="/login"/>
-        <LoginCard/>
+        <LoginCard @get-data="getData"/>
     </div>
 </template>
 <script setup>
 const route = useRoute()
+function getData(form){
+    console.log(form)
+}
 </script>
 
 <style scoped>
@@ -21,7 +24,7 @@ const route = useRoute()
 }
 #teatcher{
     position: absolute;
-    background-image: url('../../assets/images/teatcherBackground.png');
+    background-image: url('../../assets/images/teacherBackground.png');
     background-size: cover;
     background-repeat: no-repeat;
 }
