@@ -16,7 +16,8 @@ const props = defineProps(['img'])
 </script>
 <style scoped>
 .HightlightContainer {
-  @apply w-72 sm:w-96 h-max p-2 flex flex-row items-center justify-center gap-4 bg-white
+  @apply w-72 sm:w-96 h-max p-2 flex flex-row items-center justify-center gap-4
+  bg-white/50 backdrop-blur-md
   rounded-[25px] border border-black shadow
 }
 .HightlightContainer > img {

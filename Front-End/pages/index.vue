@@ -60,7 +60,6 @@
                     </div>
                 </div>
             </section>
-
         </div>
     </NuxtLayout>
 </template>
@@ -115,7 +114,7 @@ const rassons = ref([
 }
 
 .HomeContainer>section {
-    @apply w-full min-h-screen py-4 px-6
+    @apply w-full min-h-screen py-6 px-3
 }
 
 .HomeContainer>section.SectionWelcome {
@@ -124,11 +123,12 @@ const rassons = ref([
 }
 
 .HomeContainer>section.SectionRasson {
-    @apply bg-white -mt-16 h-max min-h-[150vh] rounded-t-[50px] flex flex-col gap-12 items-center justify-start
+    @apply bg-white -mt-16 h-max min-h-[150vh]
+     rounded-t-[50px] flex flex-col gap-12 items-center justify-start
 }
 
 .HomeContainer>section.SectionRasson>h1 {
-    @apply text-4xl
+    @apply text-2xl sm:text-4xl text-center
 }
 
 .HomeContainer>section.SectionRasson>div {
@@ -136,11 +136,12 @@ const rassons = ref([
 }
 
 .HomeContainer>section.TrailSection {
-    @apply bg-white h-[150vh] flex flex-col gap-12 items-center justify-start border-t border-black/50
+    @apply bg-white min-h-[150vh] flex flex-col gap-12 items-center justify-start px-8
 }
 
 .HomeContainer>section.TrailSection>h1 {
-    @apply text-4xl
+    @apply w-full border-t border-black/50
+    text-2xl sm:text-4xl text-center pt-6
 }
 
 .HomeContainer>section.TrailSection>div.HighlightsContainer {
@@ -150,8 +151,7 @@ const rassons = ref([
 
 .HomeContainer>section.TrailSection>div.HighlightsContainer>div {
     background-size: cover;
-    background-attachment: fixed;
-    @apply w-full h-[70vh] flex items-center justify-center rounded-3xl
+    @apply w-full h-[70vh] hover:h-[85vh] transition-all cursor-pointer flex items-center justify-center rounded-3xl
 }
 
 .HomeContainer>section.TrailSection>div.HighlightsContainer>div.fullStack {

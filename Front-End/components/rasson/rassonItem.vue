@@ -31,7 +31,7 @@
 .RassonItemContainer > div.descContainer{
   box-shadow: 0px 20px 20px -5px rgba(0, 0, 0, 0.40);
   @apply w-52 text-sm hidden 
-  top-[110%] z-50
+  top-[110%] z-10
   absolute bg-white
   text-black/50
   rounded-[25px]

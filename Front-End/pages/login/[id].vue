@@ -14,7 +14,7 @@ function getData(form){
 <style scoped>
 .loginScreenContainer{
     @apply w-full min-h-screen flex flex-col gap-4 items-center 
-    justify-center sm:items-start p-4 sm:p-8
+    justify-center sm:items-center p-4 sm:p-8
 } 
 #student{
     position: absolute;
