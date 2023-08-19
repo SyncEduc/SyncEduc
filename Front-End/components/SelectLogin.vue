@@ -15,17 +15,19 @@ function getClickByOption(){
 
 <style>
 .SelectLoginContainer {
+    background: linear-gradient(-45deg, rgba(2,0,36,0) 0%, rgba(255,255,255,0.8) 50%, rgba(0,212,255,0) 100%);
     @apply h-max w-max p-5 flex items-center justify-center 
     cursor-pointer
-    hover:scale-110 border border-gray-400 transition-all
-    flex-col gap-2 rounded-[30px] backdrop-blur-lg bg-[#595959]/50
+    border-2 border-white/50
+    hover:scale-105 transition-all
+    flex-col gap-2 rounded-[30px] backdrop-blur-sm 
 }
  
 .SelectLoginContainer>img {
-    @apply w-40 h-40 opacity-50
+    @apply w-40 h-40 opacity-75
 }
 
 .SelectLoginContainer > span{
-    @apply text-xl text-white/50
+    @apply text-xl text-black/75 font-bold
 }
 </style>
