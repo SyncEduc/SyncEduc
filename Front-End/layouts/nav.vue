@@ -17,6 +17,14 @@
             </NavItem>
           </div>
           <div class="drawer" v-if="drawerStore.getActiveState">
+            <NavItem @click-action="drawerStore.updateActiveState">
+              <div class="flex flex-row gap-2">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span>fechar</span>
+              </div>
+            </NavItem>
             <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
             <NavItem>Cursos</NavItem>
             <NavItem>Conheça os professores</NavItem>
@@ -32,7 +40,6 @@ import {useDrawerStore} from '../store/drawer'
 const drawerStore = useDrawerStore()
 function redirect(route){
   navigateTo(route)
-  console.log(window)
 }
 
 const windowWidth = ref(0)
@@ -67,10 +74,10 @@ div.SeparatorContainer > div.NavPcResolution{
     backdrop-filter: blur(4);
     -webkit-backdrop-filter: blur(2em);
     @apply flex flex-col gap-16 items-center justify-start
-    w-72 h-screen absolute top-0 
+    w-72 h-screen fixed top-0 
     p-4 
     right-0 z-50
-    bg-white/50 backdrop-blur-md
+    bg-white shadow-lg
   }
 }
 

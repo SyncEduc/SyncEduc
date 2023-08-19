@@ -1,32 +1,44 @@
 <template>
-    <div class="LoginContainer" >
-        <img class="w-full min-h-screen" id="background">
-        <h1>Escolha a forma de Login!</h1>
-        <div>
-            <SelectLogin option="Aluno(a)" :type="1"/>
-            <SelectLogin option="Professor(a)" :type="2"/>
+    <div class="loginScreenContainer" >
+        <div class="bg-white">
+            <LoginCard @get-switch="getSwitch"/>
         </div>
-        <BackButton route-back="/"/>
+        <div :id="!swi ? 'student' : 'teatcher'"></div>
+        
     </div>
 </template>
+<script setup>
+const route = useRoute()
+const swi = ref(false)
+function getSwitch(event){
+    swi.value = event
+}
+function getData(form){
+    console.log(form)
+}
+</script>
 
 <style scoped>
-.LoginContainer{
-    z-index: 20;
-    @apply w-full min-h-screen flex items-center justify-center flex-col gap-6 bg-black/50
+.loginScreenContainer{
+    @apply min-w-full min-h-screen flex items-center justify-center lg:justify-between
+} 
+.loginScreenContainer > div{
+    @apply w-2/4 min-h-screen flex flex-col items-center justify-center gap-4
 }
-.LoginContainer > h1{
-    @apply text-2xl sm:text-4xl text-white
-}
-.LoginContainer > div{
-    @apply flex flex-col sm:flex-row  items-center justify-center gap-6
-}
-#background{
-    position: absolute;
-    z-index: -10;
-    background-image: url('../../assets/images/loginBackground.jpg');
+#student{
+    background-image: url('../../assets/images/studentOption.jpg');
     background-size: cover;
     background-repeat: no-repeat;
+    background-position-x: -100px;
+    @apply hidden lg:flex
+    
+}
+#teatcher{
+    background-image: url('../../assets/images/teacherOption.jpg');
+    background-position-x: -100px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    @apply hidden lg:flex
 }
 
 </style>

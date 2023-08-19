@@ -6,15 +6,17 @@
     </svg>
     Voltar
   </button>
+
+  
+
 </template>
 <script setup>
 const props = defineProps(['routeBack'])
 </script>
 <style scoped>
 button{
-    @apply w-max flex flex-row items-center justify-center gap-2 text-black/75 border 
-    border-[#909090] rounded-[10px] backdrop-blur-lg bg-white/50 p-4
-    hover:text-2xl transition-all
+    @apply w-max flex flex-row items-center justify-center gap-2 text-black/75
+    transition-all hover:scale-105
 }
 
 </style>

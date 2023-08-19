@@ -123,7 +123,7 @@ const rassons = ref([
 }
 
 .HomeContainer>section.SectionRasson {
-    @apply bg-white -mt-16 h-max min-h-[150vh]
+    @apply bg-white -mt-16 h-max min-h-[20vh]
      rounded-t-[50px] flex flex-col gap-12 items-center justify-start
 }
 
@@ -156,7 +156,6 @@ const rassons = ref([
 
 .HomeContainer>section.TrailSection>div.HighlightsContainer>div.fullStack {
     background-image: url('../assets/images/programmingDomination.webp');
-
 }
 
 .HomeContainer>section.TrailSection>div.HighlightsContainer>div.mobile {
