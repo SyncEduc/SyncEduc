@@ -124,7 +124,7 @@ const rassons = ref([
 }
 
 .HomeContainer>section.SectionRasson {
-    @apply bg-white -mt-16 h-max min-h-[20vh]
+    @apply bg-white h-max min-h-[20vh]
      rounded-t-[50px] flex flex-col gap-12 items-center justify-start
 }
 

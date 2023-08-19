@@ -2,7 +2,9 @@
   <div class="NavContainer">
     <Nav>
       <div class="SeparatorContainer">
-          <div>SyncEduc</div>
+          <div>
+            <img src="../assets/images/HorizontalLogo.png" class="w-[120px] h-[56px]"/>
+          </div>
           <div class="NavPcResolution">
             <NavItem>Sobre</NavItem>
             <NavItem>Cursos</NavItem>
