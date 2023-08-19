@@ -120,6 +120,7 @@ const rassons = ref([
 .HomeContainer>section.SectionWelcome {
     background-image: url('../assets/images/homeBackground.png');
     background-size: cover;
+    background-position: center;
 }
 
 .HomeContainer>section.SectionRasson {
