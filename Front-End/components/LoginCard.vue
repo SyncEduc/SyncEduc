@@ -3,11 +3,15 @@
     <BackButton class="absolute left-5 top-5"/>
     <img src="../assets/images/logo.png" alt="logo">
     <div class="InputGroup">
-      <input v-model="form.name" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
-      <input v-model="form.email" type="email" name="email" placeholder="Seu email">
-      <input v-model="form.birth" v-show="isRegister" type="date" name="birth" placeholder="Data de nascimento">
-      <div class="passwordInput" 
-      :class="{'border-2 border-red-300':passwordTest == false && isRegister, 'border-green-500': passwordTest && isRegister}">
+      <input v-model="form.name" class="border-gray-300 focus:border-black" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
+      <input v-model="form.email" :class="{
+        'border-red-300':emailTest == false && isRegister,
+        'border-gray-300 focus:border-black': !isRegister,
+       'border-green-500': emailTest && isRegister}"
+      v-on:input="checkEmail" type="email" name="email" placeholder="Seu email">
+      <input v-model="form.birth" class="border-gray-300 focus:border-black" v-show="isRegister" type="date" name="birth" placeholder="Data de nascimento">
+      <div class="passwordInput"
+      :class="{'border-2 border-red-300':passwordTest == false && isRegister, 'border-gray-300 notRegister': !isRegister, 'border-green-500': passwordTest && isRegister}">
         <input v-model="form.password" v-on:input="checkPassword" :type="seePassword ? 'text':'password'" name="password" placeholder="Sua senha">
         <svg @click="seePassword = !seePassword" v-if="seePassword" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z"/></svg>
         <svg @click="seePassword = !seePassword" v-else xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.5c-3.8 0-7.2-2.1-8.8-5.5H1c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5h-2.2c-1.6 3.4-5 5.5-8.8 5.5Z"/></svg>
@@ -31,6 +35,7 @@
 <script setup>
 const isRegister = ref(false)
 const passwordTest = ref(false)
+const emailTest = ref(false)
 const isTeacher = ref(false)
 const seePassword = ref(false)
 function getSWitchValue(event){
@@ -50,6 +55,15 @@ function checkPassword(){
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
     const check = regex.test(form.value.password)
     passwordTest.value = check ? true : false
+  }
+}
+
+function checkEmail(){
+  if(isRegister){
+    const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i;
+    const check = regex.test(form.email)
+    console.log(check)
+    emailTest.value = check ? true : false
   }
 }
 
@@ -74,23 +88,24 @@ function redirectTeatcherToSupport(){
 }
 .passwordInput{
   @apply w-full relative flex items-center justify-between gap-2
-  pl-4 w-full rounded-full bg-gray-200/75 border outline-none
+  pl-4  rounded-full bg-gray-200/75 border
    h-10 text-black/75 transition-all 
-    focus:border-black
+   
+}
+
+.notRegister:has(input:focus){
+  @apply border-black
 }
 .passwordInput > svg{
   @apply mr-4 text-black/50 cursor-pointer
 }
 .passwordInput > input{
-  @apply w-full bg-transparent outline-none  
-}
-.inputBorderGray{
-  @apply border-[#BEBEBE] focus:border-black
+  @apply w-full bg-transparent outline-none 
 }
 .InputGroup > input{
   @apply pl-4 w-full rounded-full bg-gray-200/75 border outline-none
      h-10 text-black/75 transition-all 
-     border-[#BEBEBE] focus:border-black
+      
 }
 .InputGroup > input[type=date]{
   @apply px-4
