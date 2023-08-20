@@ -7,7 +7,7 @@
           </div>
           <div class="NavPcResolution">
             <NavItem>Sobre</NavItem>
-            <NavItem>Cursos</NavItem>
+            <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem>Conheça os professores</NavItem>
             <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
           </div>
@@ -28,7 +28,7 @@
               </div>
             </NavItem>
             <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
-            <NavItem>Cursos</NavItem>
+            <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem>Conheça os professores</NavItem>
             <NavItem>Sobre</NavItem>
           </div>
@@ -53,6 +53,17 @@ onMounted(() => {
 })
 </script>
 <style scoped>
+@keyframes drawer {
+  from{
+    transform: translateX(100vw);
+  }to{
+    transform: translateX(0);
+  }
+  
+}
+* {
+    font-family: 'JetBrains Mono', monospace;
+}
 div.NavContainter{
   @apply w-full min-h-screen 
 }
@@ -71,16 +82,13 @@ div.SeparatorContainer > div.NavPcResolution{
     display: none;
   }
 }
-@supports ((-webkit-backdrop-filter: none) or (backdrop-filter: none)) {
-  div.SeparatorContainer > div.drawer{
-    backdrop-filter: blur(4);
-    -webkit-backdrop-filter: blur(2em);
-    @apply flex flex-col gap-16 items-center justify-start
-    w-72 h-screen fixed top-0 
-    p-4 
-    right-0 z-50
-    bg-white shadow-lg
-  }
+div.SeparatorContainer > div.drawer{
+  animation: drawer 300ms linear;
+  @apply flex flex-col gap-16 items-center justify-start
+  w-72 h-screen fixed top-0 
+  p-4 
+  right-0 z-50
+  bg-white shadow-lg
 }
 
 </style>

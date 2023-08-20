@@ -16,9 +16,13 @@ function getSwitch(event){
 function getData(form){
     console.log(form)
 }
+
 </script>
 
 <style scoped>
+* {
+    font-family: 'JetBrains Mono', monospace;
+}
 .loginScreenContainer{
     @apply min-w-full min-h-screen flex items-center justify-center lg:justify-between
 } 

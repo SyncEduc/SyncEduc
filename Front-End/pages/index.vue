@@ -100,6 +100,8 @@ const rassons = ref([
         desc: 'Ao concluir um curso, você receberá um certificado de conclusão que pode enriquecer seu currículo e destacar suas habilidades aos olhos dos empregadores.'
     }
 ])
+
+
 </script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');

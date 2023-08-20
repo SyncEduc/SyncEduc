@@ -26,7 +26,7 @@
       </p>
       <p v-else>
         Gostaria de fazer parte da nossa equipe de professores?
-        <span @click="redirectTeatcherToSupport()">Click aqui!</span>
+        <span @click="redirectTeatcherToSupport()">Clique aqui!</span>
       </p>
     </div>
     <button class="submitButton" @click="emit('get-data', form)">{{ !isRegister ? 'Login' : 'Registrar' }}</button>
@@ -77,7 +77,7 @@ function redirectTeatcherToSupport(){
 <style scoped>
 @import url('../assets/css/variables.css');
 .CardContainer{
-  @apply w-72 sm:w-96 h-max flex flex-col items-center justify-center p-8  relative
+  @apply w-[90vw] sm:w-96 h-max flex flex-col items-center justify-center p-8  relative
   gap-8 rounded-[30px] bg-white/50 backdrop-blur-lg shadow-lg border border-black/25
 }
 .CardContainer > img{
