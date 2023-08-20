@@ -1,6 +1,5 @@
 <template>
   <div class="adminContainer">
-    <BackButton route-back="/login"/>
     <LoginCard @get-data="getData"/>
   </div>
 </template>
