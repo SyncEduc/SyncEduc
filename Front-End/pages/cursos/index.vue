@@ -5,7 +5,7 @@
       </section>
       <section class="section_2">
         <div class="header">
-          <h1>Nossos Cursos</h1>
+          <h1>Nossos Cursos:</h1>
           <div>
             <span>Filtrar:</span>
             <Dropdown :list="listCategories" v-on:get-select="(event) => categorySelected = event">{{ categorySelected.name
@@ -31,7 +31,6 @@ const courseStore = useCourseStore()
 const categorySelected = ref({})
 const listCategories = ref([])
 const listCourses = ref([])
-
 
 onMounted(() => {
   courseStore.fetchCategories()
@@ -84,5 +83,7 @@ onMounted(() => {
 }
 
 .coursesContainer>section.section_2>div.courses {
-  @apply w-full h-max flex flex-row gap-4 items-center justify-center flex-wrap
-}</style>
+  @apply flex flex-wrap gap-8 justify-center items-stretch
+}
+
+</style>
