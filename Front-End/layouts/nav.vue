@@ -6,9 +6,9 @@
             <img src="../assets/images/HorizontalLogo.png" class="w-[120px] h-[56px]"/>
           </div>
           <div class="NavPcResolution">
-            <NavItem>Sobre</NavItem>
+            <NavItem @click-action="redirect('/')">Inicio</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
-            <NavItem>Conheça os professores</NavItem>
+            <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
             <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
           </div>
           <div class="menuButton" v-if="windowWidth < 1024">
@@ -29,8 +29,8 @@
             </NavItem>
             <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
-            <NavItem>Conheça os professores</NavItem>
-            <NavItem>Sobre</NavItem>
+            <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
+            <NavItem @click-action="redirect('/')">Inicio</NavItem>
           </div>
       </div>
     </Nav>

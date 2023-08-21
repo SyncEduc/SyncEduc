@@ -35,7 +35,7 @@ export const useCourseStore = defineStore({
       this.courses = [
         {
           name: 'Curso de edição de video',
-          desc: 'Curso introdutório onde você vai poder absorver conteudos sobre edição de videos',
+          desc: 'Curso introdutório onde você vai poder absorver conteudos sobre edição de videosCurso introdutório onde você vai poder absorver conteudos sobre ediçãa',
           image: 'https://www.sagicapriprodutora.com.br/images/curso_de_edicao_de_videos_7.jpeg',
           id: 19231231234123,
           stars: 4,
@@ -58,12 +58,37 @@ export const useCourseStore = defineStore({
               name: 'Back-end',
               id: 1928391
             },
+            
+            {
+              name: 'Back-end',
+              id: 1928391
+            },
+            
+            {
+              name: 'Back-end',
+              id: 1928391
+            },{
+              name: 'Back-end',
+              id: 1928391
+            },{
+              name: 'Back-end',
+              id: 1928391
+            },{
+              name: 'Back-end',
+              id: 1928391
+            },{
+              name: 'Back-end',
+              id: 1928391
+            },{
+              name: 'Back-end',
+              id: 1928391
+            },
           ]
         },
         {
           name: 'Curso de edição de video',
           desc: 'Curso introdutório onde você vai poder absorver conteudos sobre edição de videos',
-          image: 'https://www.sagicapriprodutora.com.br/images/curso_de_edicao_de_videos_7.jpeg',
+          image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStRHnnswWpnpgqflrqvLU4aSMjvhlrCVrtBg&usqp=CAU',
           id: 192312312341123123,
           stars: 4,
           teacher: {
