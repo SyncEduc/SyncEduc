@@ -37,7 +37,7 @@
         <div class="categories">
           <div v-for="(category, index) in selectedCourse.categories" :key="index">{{ category.name }}</div>
         </div>
-        <button>Inscrever-se</button>
+        <button @click="navigateTo(`/cursos/${selectedCourse.id}?aula=1`)">Inscrever-se</button>
       </div>
       </div>
     </section>
@@ -63,7 +63,6 @@ const selectedCourse = ref({
 },)
 onMounted(() => {
   const findCourse = courseStore.getCoursesList.find(c=> c.id == route.params.id)
-  console.log(findCourse)
   if(courseStore.getCoursesList.length >=1 && findCourse){
     selectedCourse.value = findCourse
   }else{

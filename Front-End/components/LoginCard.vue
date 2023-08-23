@@ -3,33 +3,34 @@
     <BackButton class="absolute left-5 top-5"/>
     <img src="../assets/images/logo.png" alt="logo">
     <div class="InputGroup">
-      <input v-model="form.name" class="border-gray-300 focus:border-black" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
+      <input v-model="form.name" :class="{'border-green-500': form.name.length >=1 && isRegister}" class="border-gray-300 focus:border-black" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
       <input v-model="form.email" :class="{
         'border-red-300':emailTest == false && isRegister,
         'border-gray-300 focus:border-black': !isRegister,
-       'border-green-500': emailTest && isRegister}"
+       'border-green-500': emailTest == true && isRegister}"
       v-on:input="checkEmail" type="email" name="email" placeholder="Seu email">
-      <input v-model="form.birth" class="border-gray-300 focus:border-black" v-show="isRegister" type="date" name="birth" placeholder="Data de nascimento">
+      <input v-model="form.birth" :class="{'border-green-500': form.birth.length >=1 && isRegister}" class="border-gray-300 focus:border-black" v-show="isRegister" type="date" name="birth" placeholder="Data de nascimento">
       <div class="passwordInput"
       :class="{'border-2 border-red-300':passwordTest == false && isRegister, 'border-gray-300 notRegister': !isRegister, 'border-green-500': passwordTest && isRegister}">
         <input v-model="form.password" v-on:input="checkPassword" :type="seePassword ? 'text':'password'" name="password" placeholder="Sua senha">
         <svg @click="seePassword = !seePassword" v-if="seePassword" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 9a3 3 0 0 0-3 3a3 3 0 0 0 3 3a3 3 0 0 0 3-3a3 3 0 0 0-3-3m0 8a5 5 0 0 1-5-5a5 5 0 0 1 5-5a5 5 0 0 1 5 5a5 5 0 0 1-5 5m0-12.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5Z"/></svg>
         <svg @click="seePassword = !seePassword" v-else xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.5c-3.8 0-7.2-2.1-8.8-5.5H1c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5h-2.2c-1.6 3.4-5 5.5-8.8 5.5Z"/></svg>
       </div>
+      <span class="text-red-500 text-xs" >{{ message }}</span>
       <div class="flex flex-row gap-2" v-if="!isRegister">
         <Switch @click-action="getSWitchValue"/>
         <p>Entrar como professor</p>
       </div>
       <p v-if="!isTeacher">
         {{isRegister ? 'Já tem uma conta? ' : 'Ainda não tem uma conta? '}} 
-        <span @click="isRegister = !isRegister">{{ isRegister ? 'Fazer login' : 'Registre-se!' }}</span>
+        <span @click="switchMode">{{ isRegister ? 'Fazer login' : 'Registre-se!' }}</span>
       </p>
       <p v-else>
         Gostaria de fazer parte da nossa equipe de professores?
         <span @click="redirectTeatcherToSupport()">Clique aqui!</span>
       </p>
     </div>
-    <button class="submitButton" @click="emit('get-data', form)">{{ !isRegister ? 'Login' : 'Registrar' }}</button>
+    <button class="submitButton" @click="sendForm">{{ !isRegister ? 'Login' : 'Registrar' }}</button>
   </div>
 </template>
 <script setup>
@@ -38,6 +39,11 @@ const passwordTest = ref(false)
 const emailTest = ref(false)
 const isTeacher = ref(false)
 const seePassword = ref(false)
+const message = ref('')
+function switchMode(){
+  message.value = ''
+  isRegister.value = !isRegister.value
+}
 function getSWitchValue(event){
   isTeacher.value = event.value
   emit('get-switch', isTeacher.value)
@@ -50,6 +56,24 @@ const form = ref({
   isRegister: isRegister.value
 })
 
+function sendForm(){
+  form.value.isRegister = isRegister.value
+  if(isRegister.value){
+    if(form.value.name && form.value.email && form.value.birth &&  form.value.password && passwordTest.value && emailTest.value){
+      console.log('Passou Registro')
+    }else{
+      message.value = 'Complete todos os dados!'
+    }
+  }else{
+    if(form.value.email && form.value.password && passwordTest.value && emailTest.value){
+      console.log('Passou Login')
+    }else{
+      message.value = 'Complete todos os dados!'
+    }
+  }
+  
+
+}
 function checkPassword(){
   if(isRegister){
     const regex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/
@@ -60,9 +84,8 @@ function checkPassword(){
 
 function checkEmail(){
   if(isRegister){
-    const regex = /^[a-z0-9.]+@[a-z0-9]+\.[a-z]+\.([a-z]+)?$/i;
-    const check = regex.test(form.email)
-    console.log(check)
+    const regex = /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/g;
+    const check = regex.test(form.value.email)
     emailTest.value = check ? true : false
   }
 }
