@@ -1,18 +1,18 @@
 <template>
     <div class="loginScreenContainer" >
         <div class="bg-white">
-            <LoginCard @get-switch="getSwitch"/>
+            <LoginCard @get-switch="getSwitch" @get-data="getData"/>
         </div>
         <div :id="!swi ? 'student' : 'teatcher'"></div>
         
     </div>
 </template>
 <script setup>
-const route = useRoute()
 const swi = ref(false)
 function getSwitch(event){
     swi.value = event
 }
+
 function getData(form){
     console.log(form)
 }

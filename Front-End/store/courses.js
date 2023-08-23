@@ -39,6 +39,15 @@ export const useCourseStore = defineStore({
           image: 'https://www.sagicapriprodutora.com.br/images/curso_de_edicao_de_videos_7.jpeg',
           id: 19231231234123,
           stars: 4,
+          lessons:[
+            {
+              title: 'Aula introdutória 1',
+              videoSource: 'https://vod-progressive.akamaized.net/exp=1692752309~acl=%2Fvimeo-transcode-storage-prod-us-central1-h264-2160p%2F01%2F3329%2F11%2F291648067%2F1106060000.mp4~hmac=54359f11741a27349bdec0626ff3e227d598eea6a396817faa9a989a91a55b6e/vimeo-transcode-storage-prod-us-central1-h264-2160p/01/3329/11/291648067/1106060000.mp4'
+            },{
+              title: 'Aula introdutória 2',
+              videoSource: 'https://player.vimeo.com/external/342571552.hd.mp4?s=6aa6f164de3812abadff3dde86d19f7a074a8a66&profile_id=175&oauth2_token_id=57447761'
+            }
+          ],
           teacher: {
             name: 'Luís Daví',
             desc: 'Professor de programação e encatador de novinhas, Super heroi, salvador do mundo, governador de todas as terras',
@@ -84,45 +93,7 @@ export const useCourseStore = defineStore({
               id: 1928391
             },
           ]
-        },
-        {
-          name: 'Curso de edição de video',
-          desc: 'Curso introdutório onde você vai poder absorver conteudos sobre edição de videos',
-          image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcStRHnnswWpnpgqflrqvLU4aSMjvhlrCVrtBg&usqp=CAU',
-          id: 192312312341123123,
-          stars: 4,
-          teacher: {
-            name: 'Luís Daví',
-            desc: 'Professor de programação e encatador de novinhas',
-            image: 'https://linkconnection.com.br/wp-content/uploads/2023/02/fotos-para-perfil-922x1024.jpg',
-            stars: 3
-          },
-          categories: [
-            {
-              name: 'Audio-Visual',
-              id: 73784134
-            }
-          ]
-        },
-        {
-          name: 'Curso de edição de video',
-          desc: 'Curso introdutório onde você vai poder absorver conteudos sobre edição de videos',
-          image: 'https://www.sagicapriprodutora.com.br/images/curso_de_edicao_de_videos_7.jpeg',
-          id: 19231231231231234123,
-          stars: 4,
-          teacher: {
-            name: 'Luís Daví',
-            desc: 'Professor de programação e encatador de novinhas',
-            image: 'https://linkconnection.com.br/wp-content/uploads/2023/02/fotos-para-perfil-922x1024.jpg',
-            stars: 3
-          },
-          categories: [
-            {
-              name: 'Audio-Visual',
-              id: 73784134
-            }
-          ]
-        },
+        }
       ]
     }
   }
