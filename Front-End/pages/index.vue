@@ -65,14 +65,14 @@
 </template>
 <script setup>
 import know from '../assets/images/know.png'
-import clock from '../assets/images/clock.png'
+import clock from '../assets/images/clock.webp'
 import diversity from '../assets/images/diversidade.png'
-import commnity from '../assets/images/community.png'
-import certificate from '../assets/images/certificate.png'
-import rocket from '../assets/images/rocket.png'
-import iot from '../assets/images/iot.png'
-import ai from '../assets/images/ai.png'
-import smartphone from '../assets/images/smartphone.png'
+import commnity from '../assets/images/community.webp'
+import certificate from '../assets/images/certificate.webp'
+import rocket from '../assets/images/rocket.webp'
+import iot from '../assets/images/iot.webp'
+import ai from '../assets/images/ai.webp'
+import smartphone from '../assets/images/smartphone.webp'
 const rassons = ref([
     {
         img: know,
@@ -120,7 +120,7 @@ const rassons = ref([
 }
 
 .HomeContainer>section.SectionWelcome {
-    background-image: url('../assets/images/homeBackground.png');
+    background-image: url('../assets/images/homeBackground.webp');
     background-size: cover;
     background-position: center;
 }

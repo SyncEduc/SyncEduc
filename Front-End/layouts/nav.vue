@@ -3,7 +3,7 @@
     <Nav>
       <div class="SeparatorContainer">
           <div>
-            <img src="../assets/images/HorizontalLogo.png" class="w-[120px] h-[56px]"/>
+            <img src="../assets/images/HorizontalLogo.webp" class="w-[120px] h-[56px]"/>
           </div>
           <div class="NavPcResolution">
             <NavItem @click-action="redirect('/')">Inicio</NavItem>

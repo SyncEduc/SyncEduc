@@ -30,7 +30,7 @@ function getData(form){
     @apply w-2/4 min-h-screen flex flex-col items-center justify-center gap-4
 }
 #student{
-    background-image: url('../../assets/images/studentOption.jpg');
+    background-image: url('../../assets/images/studentOption.webp');
     background-size: cover;
     background-repeat: no-repeat;
     background-position-x: -100px;
@@ -38,7 +38,7 @@ function getData(form){
     
 }
 #teatcher{
-    background-image: url('../../assets/images/teacherOption.jpg');
+    background-image: url('../../assets/images/teacherOption.webp');
     background-position-x: -100px;
     background-size: cover;
     background-repeat: no-repeat;

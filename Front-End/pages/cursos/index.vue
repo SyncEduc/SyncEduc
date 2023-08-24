@@ -55,7 +55,7 @@ onMounted(() => {
 }
 
 .coursesContainer>section.section_1 {
-  background-image: url('../../assets/images/coursesBackground.png');
+  background-image: url('../../assets/images/coursesBackground.webp');
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

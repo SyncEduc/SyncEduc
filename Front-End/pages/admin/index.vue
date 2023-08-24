@@ -11,7 +11,7 @@ function getData(form){
 <style scoped>
 .adminContainer{
     position: absolute;
-    background-image: url('../../assets/images/adminBackground.jpg');
+    background-image: url('../../assets/images/adminBackground.webp');
     background-size: cover;
     background-repeat: no-repeat;
   @apply w-full min-h-screen flex flex-col gap-4 items-center 

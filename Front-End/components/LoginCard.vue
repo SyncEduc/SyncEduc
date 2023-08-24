@@ -1,7 +1,7 @@
 <template>
   <div class="CardContainer">
     <BackButton class="absolute left-5 top-5"/>
-    <img src="../assets/images/logo.png" alt="logo">
+    <img src="../assets/images/logo.webp" alt="logo">
     <div class="InputGroup">
       <input v-model="form.name" :class="{'border-green-500': form.name.length >=1 && isRegister}" class="border-gray-300 focus:border-black" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
       <input v-model="form.email" :class="{
@@ -21,14 +21,16 @@
         <Switch @click-action="getSWitchValue"/>
         <p>Entrar como professor</p>
       </div>
-      <p v-if="!isTeacher">
-        {{isRegister ? 'Já tem uma conta? ' : 'Ainda não tem uma conta? '}} 
-        <span @click="switchMode">{{ isRegister ? 'Fazer login' : 'Registre-se!' }}</span>
-      </p>
-      <p v-else>
-        Gostaria de fazer parte da nossa equipe de professores?
-        <span @click="redirectTeatcherToSupport()">Clique aqui!</span>
-      </p>
+      <div class="optionText">
+        <p v-if="!isTeacher">
+          {{isRegister ? 'Já tem uma conta? ' : 'Ainda não tem uma conta? '}} 
+          <span @click="switchMode">{{ isRegister ? 'Fazer login' : 'Registre-se!' }}</span>
+        </p>
+        <p v-else>
+          Gostaria de fazer parte da nossa equipe de professores?
+          <span @click="redirectTeatcherToSupport()">Clique aqui!</span>
+        </p>
+      </div>
     </div>
     <button class="submitButton" @click="sendForm">{{ !isRegister ? 'Login' : 'Registrar' }}</button>
   </div>
@@ -100,7 +102,7 @@ function redirectTeatcherToSupport(){
 <style scoped>
 @import url('../assets/css/variables.css');
 .CardContainer{
-  @apply w-[90vw] sm:w-96 h-max flex flex-col items-center justify-center p-8  relative
+  @apply w-[90vw] sm:w-96 h-[506px] flex flex-col items-center justify-center p-8  relative
   gap-8 rounded-[30px] bg-white/50 backdrop-blur-lg shadow-lg border border-black/25
 }
 .CardContainer > img{
@@ -113,7 +115,6 @@ function redirectTeatcherToSupport(){
   @apply w-full relative flex items-center justify-between gap-2
   pl-4  rounded-full bg-gray-200/75 border
    h-10 text-black/75 transition-all 
-   
 }
 
 .notRegister:has(input:focus){
@@ -133,10 +134,13 @@ function redirectTeatcherToSupport(){
 .InputGroup > input[type=date]{
   @apply px-4
 }
-.InputGroup > p{
+.InputGroup > div.optionText { 
+  @apply h-[72px]
+}
+.InputGroup > div.optionText> p{
   @apply text-black
 }
-.InputGroup > p > span{
+.InputGroup > div.optionText> p > span{
   @apply text-[#2f8ca9] cursor-pointer border-b border-transparent 
   hover:border-[#2d9dff]
 }
