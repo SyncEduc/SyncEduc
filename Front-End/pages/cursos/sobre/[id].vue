@@ -4,7 +4,7 @@
       <div>
         <div class="leftAboutCourse">
           <div class="self-start">
-            <BackButton @click-action="navigateTo('/cursos')"/>
+            <BackButton @click-action="navigateTo('/cursosawdawdawd')"/>
           </div>
           <img :src="selectedCourse.image" :alt="selectedCourse.name">
           <img :src="selectedCourse.image" alt="" class="background">
