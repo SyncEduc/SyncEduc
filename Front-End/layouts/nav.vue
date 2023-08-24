@@ -35,9 +35,11 @@
       </div>
     </Nav>
     <slot/>
+    <AuthCookie></AuthCookie>
   </div>
 </template>
 <script setup>
+import AuthCookie from '~/components/authCookie.vue';
 import {useDrawerStore} from '../store/drawer'
 const drawerStore = useDrawerStore()
 function redirect(route){
@@ -65,7 +67,7 @@ onMounted(() => {
     font-family: 'JetBrains Mono', monospace;
 }
 div.NavContainter{
-  @apply w-full min-h-screen 
+  @apply w-full min-h-screen relative flex items-center justify-center
 }
 div.SeparatorContainer{
   @apply w-full h-full flex flex-row items-center justify-between
