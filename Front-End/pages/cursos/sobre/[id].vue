@@ -4,7 +4,7 @@
       <div>
         <div class="leftAboutCourse">
           <div class="self-start">
-            <BackButton @click-action="navigateTo('/cursosawdawdawd')"/>
+            <BackButton @click-action="backRoute"/>
           </div>
           <img :src="selectedCourse.image" :alt="selectedCourse.name">
           <img :src="selectedCourse.image" alt="" class="background">
@@ -47,6 +47,7 @@
 import { useCourseStore } from '../../../store/courses'
 const courseStore = useCourseStore()
 const route = useRoute()
+const backRoute = ()=> navigateTo('/cursos')
 const selectedCourse = ref({
   name: '',
   desc: '',
@@ -60,7 +61,7 @@ const selectedCourse = ref({
     stars: 3
   },
   categories: []
-},)
+})
 onMounted(() => {
   const findCourse = courseStore.getCoursesList.find(c=> c.id == route.params.id)
   if(courseStore.getCoursesList.length >=1 && findCourse){

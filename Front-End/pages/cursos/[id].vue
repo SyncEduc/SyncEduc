@@ -47,7 +47,7 @@
             <h1>Luis Davi</h1>
             <div class="commentForm">
               <textarea maxlength="300" class="textComment" placeholder="Seu Comentário" v-model="newComment"></textarea>
-              <button class="submit">
+              <button class="submit" @click="sendComment">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                   <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                     stroke-width="2.5"
@@ -72,7 +72,7 @@
                   <div class="commentForm">
                     <textarea maxlength="300" class="textComment" placeholder="Seu Comentário"
                       v-model="newResponse"></textarea>
-                    <button class="submit">
+                    <button class="submit" @click="sendResponse(comment.comment_id)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                           stroke-width="2.5"
@@ -133,6 +133,8 @@ function redirectUser(){
   }
 }
 
+
+
 definePageMeta({
   middleware:'01-class'
 })
@@ -163,6 +165,12 @@ function openReply(comment){
 
 }
 
+function sendComment(){
+  commentsStore.addComments(newComment.value)
+}
+function sendResponse(comment_id){
+  commentsStore.addResponse({target: comment_id, message: newResponse})
+}
 async function updateCurentLesson(){
   currentLesson.value = route.query.aula -1
 }
