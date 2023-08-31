@@ -22,6 +22,11 @@ export const useUserStudentStore = defineStore({
       })
       this.user = data._value
       useCookie("_gtk").value = encodeURIComponent(this.user.token)
+    },
+    async getUser(){
+      await fetch("https://randomuser.me/api").then(res=>res.json()).then(res=>{
+        this.user = res.results[0]
+      })
     }
   },
   getters: {
