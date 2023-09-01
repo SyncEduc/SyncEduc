@@ -127,7 +127,7 @@ onMounted(async ()=>{
     transition: all 300ms;
     @apply absolute -bottom-52  bg-black/50 backdrop-blur text-white
     cursor-pointer p-4
-    text-center text-xs font-bold
+    text-center text-xs font-bold text-white/70
     flex flex-col gap-2 items-center justify-center
 }
 .profileContainer > .informations > .avatarContainer:hover > .updateText{
