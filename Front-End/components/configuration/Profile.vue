@@ -13,7 +13,7 @@
 
                 <p class="mt-2 text-gray-500 tracking-wide">Envie sua imagem ou arraste até aqui. </p>
 
-                <input id="dropzone-file" @change="loadAvatarImage" type="file" class="hidden" />
+                <input  id="dropzone-file" @change="loadAvatarImage" type="file" class="hidden" />
             </label>
         </Modal>
         <div class="informations">
@@ -24,6 +24,7 @@
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h11v2H5v14h14v-9h2v11H3ZM17 9V7h-2V5h2V3h2v2h2v2h-2v2h-2ZM6 17h12l-3.75-5l-3 4L9 13l-3 4Zm-1-6v8V5v6Z"/></svg>
                         <span>Atualizar foto de perfil</span>
                     </div>
+                    
                 </div>
                 <div class="edit">
                     <p data-edit="edit" class="name" 
@@ -108,7 +109,6 @@ onMounted(async ()=>{
     
 })
 </script>
-
 <style scoped>
 .profileContainer{
     @apply w-full h-max flex flex-col gap-6 items-center

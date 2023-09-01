@@ -9,6 +9,7 @@
                 <template v-for="option in options">
                     <template v-if="option.selected">
                         <ConfigurationProfile v-if="option.id == 1"/>
+                        <ConfigurationPersonalData v-if="option.id ==2"/>
                         <ConfigurationLogon v-if="option.id == 3"/>
                     </template>
                 </template>
