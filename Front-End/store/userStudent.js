@@ -26,6 +26,7 @@ export const useUserStudentStore = defineStore({
     async getUser(){
       await fetch("https://randomuser.me/api").then(res=>res.json()).then(res=>{
         this.user = res.results[0]
+        this.user.description = `🔗 https://luisdavi.vercel.app 👨‍💻 Desenvolvedor Front-end 🔎 Moderador na dev.to 📝 Escritor na dev.to`
       })
     }
   },

@@ -27,11 +27,11 @@ function emitAction(type){
 }
 .saveContainer {
     animation: show 0.3s linear;
-    @apply w-full flex h-max items-center justify-center p-5 fixed bottom-0
+    @apply w-screen flex-1 flex h-screen items-end justify-center p-5 fixed bottom-0 left-0 z-50
 }
 
 .saveContainer>.saveChanges {
-    @apply w-max h-full flex flex-row gap-6 rounded-xl shadow-xl p-4
+    @apply w-max h-max flex flex-row gap-6 rounded-xl shadow-xl p-4 bg-white
 }
 .saveContainer>.saveChanges > .text{
     @apply text-center flex items-center text-black/75
