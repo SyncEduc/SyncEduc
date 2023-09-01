@@ -9,9 +9,9 @@
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
 
-                <h2 class="mt-4 text-xl font-medium text-gray-700 tracking-wide">Payment File</h2>
+                <h2 class="mt-4 text-xl font-medium text-gray-700 tracking-wide">Enviar imagem</h2>
 
-                <p class="mt-2 text-gray-500 tracking-wide">Upload or darg & drop your file SVG, PNG, JPG or GIF. </p>
+                <p class="mt-2 text-gray-500 tracking-wide">Envie sua imagem ou arraste até aqui. </p>
 
                 <input id="dropzone-file" @change="loadAvatarImage" type="file" class="hidden" />
             </label>
