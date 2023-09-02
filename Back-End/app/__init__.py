@@ -10,6 +10,7 @@ cors = CORS(app)
 bcrypt = Bcrypt(app)
 
 
+
 connection = sqlite3.connect("app/database.sqlite", check_same_thread=False)
 cursor = connection.cursor()
 

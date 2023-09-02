@@ -9,7 +9,7 @@ def registro():
     email = request.args.get('email')
     senha = request.args.get('senha')
     nascimento = request.args.get('nascimento')
-    encrypt = bcrypt.generate_password_hash(senha)
+    encrypt = bcrypt.generate_password_hash(senha).decode("utf-8")
     
     jwtPayload = {
         'nome': nome,
@@ -47,8 +47,38 @@ def verificarToken():
             "message": "Token invalido"
         }
 
+@app.route("/login", methods=["POST"])
+def login():
+    email = request.args.get("email")
+    senha = request.args.get("senha")
+    opcao = request.args.get("opcao")
+    if(opcao == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE email = ?", [f"{email}"])
+        rows = cursor.fetchall()
+        if(len(rows) == 1):
+            valid = bcrypt.check_password_hash(rows[0][4], senha)
+            if(valid):
+                return {
+                    "token": rows[0][-1],
+                }
+            else:
+                return {
+                    "message": "Dados invalidos"
+                }
 
-
-
-
-
+@app.route("/usuario", methods=["POST"])
+def usuario():
+    tipo = request.args.get("tipo")
+    token = request.args.get("token")
+    if(tipo == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = ?", [f"{token}"])
+        rows = cursor.fetchall()
+        if(len(rows)==1):
+            return {
+                "nome": rows[0][1],
+                "email": rows[0][2],
+                "nascimento": rows[0][3],
+                "senha": rows[0][4],
+                "descricao": rows[0][5],
+                "avatar_url": rows[0][6]
+            }
