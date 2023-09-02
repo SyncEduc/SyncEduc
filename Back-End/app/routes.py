@@ -10,6 +10,7 @@ def registro():
     senha = request.args.get('senha')
     nascimento = request.args.get('nascimento')
     encrypt = bcrypt.generate_password_hash(senha)
+    
     jwtPayload = {
         'nome': nome,
         'email': email,
@@ -31,6 +32,20 @@ def registro():
             "token": token
         }
 
+
+@app.route("/verificarToken", methods=["POST"])
+def verificarToken():
+    token = request.args.get("token")
+    cursor.execute("SELECT * FROM tb_estudantes WHERE token = ?", [f"{token}"])
+    rows = cursor.fetchall()
+    if(len(rows)==1):
+        return {
+            "token": token
+        }
+    else:
+        return {
+            "message": "Token invalido"
+        }
 
 
 

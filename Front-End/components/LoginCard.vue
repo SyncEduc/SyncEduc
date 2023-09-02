@@ -58,11 +58,21 @@ const form = ref({
   isRegister: isRegister.value
 })
 
-function sendForm(){
+async function sendForm(){
   form.value.isRegister = isRegister.value
   if(isRegister.value){
     if(form.value.name && form.value.email && form.value.birth &&  form.value.password && passwordTest.value && emailTest.value){
-      console.log('Passou Registro')
+      await fetch(`http://127.0.0.1:5000/registro?nome=${form.value.name}&email=${form.value.email}&senha=${form.value.password}&nascimento=${form.value.birth}`, {
+        method: 'POST'
+      }).then(res=>res.json()).then(res=>{
+        if("message" in res){
+          message.value = res.message
+          emailTest.value = false
+        }else{
+          localStorage.setItem("_gtk", res.token)
+          navigateTo('/')
+        }
+      })
     }else{
       message.value = 'Complete todos os dados!'
     }
@@ -135,7 +145,7 @@ function redirectTeatcherToSupport(){
   @apply px-4
 }
 .InputGroup > div.optionText { 
-  @apply h-[72px]
+  @apply h-max
 }
 .InputGroup > div.optionText> p{
   @apply text-black
@@ -145,7 +155,7 @@ function redirectTeatcherToSupport(){
   hover:border-[#2d9dff]
 }
 .CardContainer > button.submitButton{
- @apply w-full h-10 rounded-[25px] bg-[#6b70d6] 
+ @apply w-full h-max py-2 rounded-[25px] bg-[#6b70d6] 
  text-white text-xl hover:scale-105 transition-all
 }
 </style>

@@ -4,20 +4,20 @@ export const useLoginStore = defineStore({
     id: 'login',
     state: () => {
         return {
-            isLogged: false
+            isLogged: true
         }
     },
 
     getters: {
         getLoginState: (state) => state.isLogged,
-        getLocalStorageToken: () =>{
-            return JSON.parse(localStorage.getItem('_gtk'))
-        }
     },
 
     actions: {
         updateLoginState(payload){
             this.isLogged = payload;
+        },
+        getLocalStorageToken: () =>{
+            return localStorage.getItem('_gtk')
         }
     }
 })

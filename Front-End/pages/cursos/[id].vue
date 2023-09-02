@@ -136,7 +136,7 @@ function redirectUser(){
 
 
 definePageMeta({
-  middleware:'01-class'
+  middleware:["02-auth"]
 })
 
 const replyClick = ref({})

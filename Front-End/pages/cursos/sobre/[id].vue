@@ -62,6 +62,9 @@ const selectedCourse = ref({
   },
   categories: []
 })
+definePageMeta({
+  middleware: ['03-class']
+})
 onMounted(() => {
   const findCourse = courseStore.getCoursesList.find(c=> c.id == route.params.id)
   if(courseStore.getCoursesList.length >=1 && findCourse){
