@@ -1,6 +1,7 @@
 from app import app, bcrypt, cursor, connection
 from flask import Flask, request
 import jwt
+import os
 
 
 @app.route("/registro", methods=['POST'])
@@ -82,3 +83,16 @@ def usuario():
                 "descricao": rows[0][5],
                 "avatar_url": rows[0][6]
             }
+        
+@app.route('/atualizarDado', methods=["POST"])
+def atualizarDado():
+    coluna = request.args.get('target')
+    token = request.args.get('token')
+    valor = request.args.get('value')
+    if(coluna == "senha"):
+        valor = bcrypt.generate_password_hash(valor).decode("utf-8")
+    cursor.execute(f"UPDATE tb_estudantes  SET {coluna} = ? WHERE token = ?", (f"{valor}", f"{token}"))
+    connection.commit()
+    return {
+        "token": token
+    }
