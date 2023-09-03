@@ -36,6 +36,8 @@
   </div>
 </template>
 <script setup>
+import { useUserStudentStore } from '~/store/userStudent'
+const studentStore = useUserStudentStore()
 const isRegister = ref(false)
 const passwordTest = ref(false)
 const emailTest = ref(false)
@@ -77,8 +79,22 @@ async function sendForm(){
       message.value = 'Complete todos os dados!'
     }
   }else{
-    if(form.value.email && form.value.password && passwordTest.value && emailTest.value){
-      console.log('Passou Login')
+    if(form.value.email && form.value.password){
+      if(isTeacher.value == false){
+        await fetch(`http://127.0.0.1:5000/login?opcao=aluno&email=${form.value.email}&senha=${form.value.password}`, {
+        method: "POST"
+        }).then(res=> res.json()).then(async res=>{
+          if(Object.keys(res).includes("message")){
+            message.value = res.message
+          }else{
+            localStorage.setItem("_gtk", res.token)
+            await studentStore.getUser()
+            navigateTo('/')
+          }
+        })
+      }else{
+        
+      }
     }else{
       message.value = 'Complete todos os dados!'
     }

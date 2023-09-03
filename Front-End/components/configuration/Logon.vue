@@ -1,9 +1,15 @@
 <template>
     <div class="logonContainer">
         <h1>Deseja se desconectar da sua conta?</h1>
-        <button>⤶ Sair</button>
+        <button @click="logout">⤶ Sair</button>
     </div>
 </template>
+<script setup>
+function logout(){
+    localStorage.removeItem("_gtk")
+    navigateTo("/")
+}
+</script>
 
 <style scoped>
 .logonContainer{

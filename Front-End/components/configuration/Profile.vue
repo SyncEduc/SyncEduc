@@ -19,7 +19,7 @@
         <div class="informations">
             <template v-if="loaded">
                 <div class="avatarContainer" @click="showModalAvatar = true">
-                    <img class="avatar" :src="cacheUser.picture.large">
+                    <img class="avatar" :src="cacheUser.avatar_url != null ? cacheUser.avatar_url : 'https://i.imgur.com/MB58STs.png'">
                     <div class="updateText" >
                         <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M3 21V3h11v2H5v14h14v-9h2v11H3ZM17 9V7h-2V5h2V3h2v2h2v2h-2v2h-2ZM6 17h12l-3.75-5l-3 4L9 13l-3 4Zm-1-6v8V5v6Z"/></svg>
                         <span>Atualizar foto de perfil</span>
@@ -35,7 +35,7 @@
                 </div>
                 <div class="edit">
                     <p class="description" data-edit="edit" contenteditable="true" 
-                    @input="(e)=> form.description = e.target.innerText">{{ cacheUser.description }}</p>
+                    @input="(e)=> form.description = e.target.innerText">{{ form.description || 'Sem descrição...' }}</p>
                     <EditIcon/>
                 </div>
             </template>
@@ -43,7 +43,7 @@
     </div>
 </template>
 <script setup>
-import {useUserStudentStore} from '../../store/userStudent';
+import { useUserStudentStore } from '../../store/userStudent';
 const studentStore = useUserStudentStore();
 const loaded = ref(false);
 const showSaveChanges = ref(false);
@@ -61,7 +61,10 @@ function loadAvatarImage(e){
 async function receiveUser(){
     await studentStore.getUser()
     cacheUser.value = studentStore.user
-    form.value.name = `${cacheUser.value.name.first} ${cacheUser.value.name.last}`
+    console.log(cacheUser.value)
+    form.value.name = cacheUser.value.nome
+    form.value.description = cacheUser.value.descricao
+    viewImageSoruce.value = ''
 }
 async function receiveSaveChangeEvent(event){
     if(!event.type){
@@ -69,6 +72,10 @@ async function receiveSaveChangeEvent(event){
         showModalAvatar.value = false
         viewImageSoruce.value = ''
         nameAvatarFile.value = ''
+    }else{
+        cacheUser.value.nome = form.value.name
+        cacheUser.value.descricao = form.value.description
+        console.log(cacheUser.value)
     }
 }
 
@@ -86,7 +93,7 @@ watch(viewImageSoruce, ()=>{
 })
 
 watch(()=>form.value.name, ()=>{
-    if(form.value.name == `${cacheUser.value.name.first} ${cacheUser.value.name.last}`){
+    if(form.value.name == cacheUser.value.nome){
         showSaveChanges.value = false
     }else{
         showSaveChanges.value = true

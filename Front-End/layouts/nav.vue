@@ -9,7 +9,10 @@
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
-            <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
+            <NavItem v-if="!loginStore.isLogged" @click-action="redirect('/login')">Login/Registro</NavItem>
+            <NavItem v-else>
+              <img @click="navigateTo('/config/user')" class="h-6 w-6 rounded-full border border-black/50 p-[0.5px] hover:scale-[1.1] transition-all" :src="studentStore.user.avatar_url == null ? 'https://i.imgur.com/MB58STs.png': studentStore.user.avatar_url">
+            </NavItem>
           </div>
           <div class="menuButton" v-if="windowWidth < 1024">
             <NavItem @click-action="drawerStore.updateActiveState">
@@ -27,7 +30,7 @@
                 <span>fechar</span>
               </div>
             </NavItem>
-            <NavItem @click-action="redirect('/login')">Login/Registro</NavItem>
+            <NavItem v-if="!loginStore.isLogged" @click-action="redirect('/login')">Login/Registro</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
@@ -41,6 +44,10 @@
 <script setup>
 import AuthCookie from '~/components/authCookie.vue';
 import {useDrawerStore} from '../store/drawer'
+import { useLoginStore } from '~/store/login';
+import { useUserStudentStore } from '~/store/userStudent';
+const studentStore = useUserStudentStore()
+const loginStore = useLoginStore()
 const drawerStore = useDrawerStore()
 function redirect(route){
   navigateTo(route)

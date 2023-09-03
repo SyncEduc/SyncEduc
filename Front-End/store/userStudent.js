@@ -7,26 +7,12 @@ export const useUserStudentStore = defineStore({
     }
   },
   actions: {
-    async registerUserStudent(body) {
-      const { data } = await useFetch('https://reqres.in/api/register', {
-        onRequest({ options }) {
-          options.method = 'POST',
-          options.body = body
-        },
-        onRequestError({error}){
-          console.error(error)
-        },
-        onResponse({response}){
-          return response
-        }
-      })
-      this.user = data._value
-      useCookie("_gtk").value = encodeURIComponent(this.user.token)
-    },
     async getUser(){
-      await fetch("https://randomuser.me/api").then(res=>res.json()).then(res=>{
-        this.user = res.results[0]
-        this.user.description = `🔗 https://luisdavi.vercel.app 👨‍💻 Desenvolvedor Front-end 🔎 Moderador na dev.to 📝 Escritor na dev.to`
+      await fetch(`http://127.0.0.1:5000/usuario?tipo=aluno&token=${localStorage.getItem("_gtk")}`,
+      {method: "POST"}
+      ).then(res=>res.json()).then(res=>{
+        this.user = res
+        console.log(this.user)
       })
     }
   },

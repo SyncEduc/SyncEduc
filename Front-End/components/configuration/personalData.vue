@@ -1,6 +1,6 @@
 <template>
     <div class="personalDataContainer">
-        <ConfigurationSaveChanges v-if="showSaveChanges"/>
+        <ConfigurationSaveChanges v-if="showSaveChanges" @action-click="receiveSaveChangesEvent"/>
         <div class="informations">
             <div class="edit">
                 <svg class="text-black/50" xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M4 20q-.825 0-1.413-.588T2 18V6q0-.825.588-1.413T4 4h16q.825 0 1.413.588T22 6v12q0 .825-.588 1.413T20 20H4Zm8-7l8-5V6l-8 5l-8-5v2l8 5Z"/></svg>
@@ -23,13 +23,21 @@ const cacheUser = ref({})
 const showSaveChanges = ref(false)
 const newPassword = ref('')
 const passwordType = ref('password')
+const newEmail = ref('')
 onMounted(async ()=>{
     await studentStore.getUser();
     cacheUser.value = studentStore.user
-    newPassword.value = cacheUser.value.login.password
 })
+function receiveSaveChangesEvent(e){
+    if(e.type){
+        cacheUser.value.email = newEmail.value
+        cacheUser.value.senha = newPassword.value
+        console.log(cacheUser)
+    }
+}
 
 function updateEmail(e){
+    newEmail.value = e.target.innerText
     showSaveChanges.value = e.target.innerText == cacheUser.value.email ? false : true;
 }
 function updatePassword(e){
