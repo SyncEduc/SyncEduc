@@ -12,7 +12,6 @@ export const useUserStudentStore = defineStore({
       {method: "POST"}
       ).then(res=>res.json()).then(res=>{
         this.user = res
-        console.log(this.user)
       })
     }
   },

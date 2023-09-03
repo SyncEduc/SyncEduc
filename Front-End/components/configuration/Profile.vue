@@ -2,9 +2,9 @@
     <div class="profileContainer">
         <ConfigurationSaveChanges v-if="showSaveChanges" @action-click="receiveSaveChangeEvent"/>
         <Modal v-if="showModalAvatar" @click-close="()=>showModalAvatar = false">
-            <img :src="viewImageSoruce" class="max-w-[250px] w-full max-h-[250px] rounded-lg" alt="">
-            <p v-if="viewImageSoruce != ''" class="text-center break-words">{{ nameAvatarFile }}</p>
-            <label v-if="viewImageSoruce == ''" for="dropzone-file" class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center">
+            <img :src="viewImageSource" class="max-w-[250px] w-full max-h-[250px] rounded-lg" alt="">
+            <p v-if="viewImageSource != ''" class="text-center break-words">{{ nameAvatarFile }}</p>
+            <label v-if="viewImageSource == ''" for="dropzone-file" class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
                 </svg>
@@ -13,7 +13,7 @@
 
                 <p class="mt-2 text-gray-500 tracking-wide">Envie sua imagem ou arraste até aqui. </p>
 
-                <input  id="dropzone-file" @change="loadAvatarImage" type="file" class="hidden" />
+                <input  id="dropzone-file" name="image" @change="loadAvatarImage" type="file" class="hidden" />
             </label>
         </Modal>
         <div class="informations">
@@ -49,33 +49,59 @@ const loaded = ref(false);
 const showSaveChanges = ref(false);
 const cacheUser = ref({});
 const nameAvatarFile = ref('')
-const viewImageSoruce = ref('')
+const viewImageSource = ref('')
 const showModalAvatar = ref(false)
+const currentFile = ref({})
+const target = ref('')
 function loadAvatarImage(e){
-    const file = e.target.files[0];
-    viewImageSoruce.value = URL.createObjectURL(file)
-    nameAvatarFile.value = file.name
+    currentFile.value = e.target.files[0];
+    viewImageSource.value = URL.createObjectURL(currentFile.value)
+    nameAvatarFile.value = currentFile.value.name
+    target.value = "avatar_url"
     
 }
 
 async function receiveUser(){
     await studentStore.getUser()
     cacheUser.value = studentStore.user
-    console.log(cacheUser.value)
     form.value.name = cacheUser.value.nome
     form.value.description = cacheUser.value.descricao
-    viewImageSoruce.value = ''
+    viewImageSource.value = ''
 }
 async function receiveSaveChangeEvent(event){
     if(!event.type){
         await receiveUser()
         showModalAvatar.value = false
-        viewImageSoruce.value = ''
+        viewImageSource.value = ''
         nameAvatarFile.value = ''
+        showSaveChanges.value = false
     }else{
         cacheUser.value.nome = form.value.name
         cacheUser.value.descricao = form.value.description
-        console.log(cacheUser.value)
+        if(target.value != "avatar_url"){
+            await fetch(`http://127.0.0.1:5000/atualizarDado?token=${localStorage.getItem('_gtk')}&target=${target.value}&value=${cacheUser.value[target.value]}`, {
+            method: 'POST'
+            }).then(res=> res.json()).then(async res=>{
+                if('token' in res){
+                    await receiveUser()
+                    showSaveChanges.value = false
+                }
+            })
+        }else{
+            console.log('awdawd')
+            const data = new FormData()
+            data.append('image', currentFile.value)
+            console.log(viewImageSource.value)
+            await fetch(`http://127.0.0.1:5000/atualizarDado?token=${localStorage.getItem('_gtk')}&target=${target.value}`, {
+                method: "POST",
+                headers:{
+                    "Content-Type": 'image/jpeg'
+                },
+                body: data
+
+            })
+        }
+        
     }
 }
 
@@ -84,10 +110,11 @@ const form = ref({
     description: '',
 })
 
-watch(viewImageSoruce, ()=>{
-    if(viewImageSoruce.value!= ''){
+watch(viewImageSource, ()=>{
+    if(viewImageSource.value!= ''){
         showSaveChanges.value = true
     }else{
+        target.value = "avatar_url"
         showSaveChanges.value = false
     }
 })
@@ -97,15 +124,15 @@ watch(()=>form.value.name, ()=>{
         showSaveChanges.value = false
     }else{
         showSaveChanges.value = true
+        target.value = "nome"
     }
 })
 
 watch(()=>form.value.description, ()=>{
-    console.log(form.value.description)
-    console.log(cacheUser.value.description)
     if(form.value.description == cacheUser.value.description){
         showSaveChanges.value = false
     }else{
+        target.value = "descricao"
         showSaveChanges.value = true
     }
 })
@@ -113,6 +140,7 @@ watch(()=>form.value.description, ()=>{
 onMounted(async ()=>{
     await receiveUser()
     loaded.value = true
+    showSaveChanges.value = false
     
 })
 </script>

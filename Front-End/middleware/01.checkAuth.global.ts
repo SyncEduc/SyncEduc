@@ -12,15 +12,12 @@ export default defineNuxtRouteMiddleware(
         }).then(res=>res.json()).then(res=>{
           if(Object.keys(res).includes("message")){
             loginStore.updateLoginState(false)
-            console.log(res.message)
           }else{
-              console.log("caiu token")
               loginStore.updateLoginState(true)
               localStorage.setItem("_gtk", res.token)
           }
         })
       } else {
-        console.log("caiu else")
         loginStore.updateLoginState(false);
       }
     }

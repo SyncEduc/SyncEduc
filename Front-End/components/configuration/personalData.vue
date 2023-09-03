@@ -24,24 +24,42 @@ const showSaveChanges = ref(false)
 const newPassword = ref('')
 const passwordType = ref('password')
 const newEmail = ref('')
+const target = ref('')
+
+async function receiveUser(){
+    await studentStore.getUser()
+    cacheUser.value = studentStore.user
+}
 onMounted(async ()=>{
     await studentStore.getUser();
     cacheUser.value = studentStore.user
 })
-function receiveSaveChangesEvent(e){
+async function receiveSaveChangesEvent(e){
     if(e.type){
         cacheUser.value.email = newEmail.value
         cacheUser.value.senha = newPassword.value
-        console.log(cacheUser)
+        await fetch(`http://127.0.0.1:5000/atualizarDado?token=${localStorage.getItem('_gtk')}&target=${target.value}&value=${cacheUser.value[target.value]}`, {
+            method: 'POST'
+        }).then(res=> res.json()).then(async res=>{
+            if('token' in res){
+                await receiveUser()
+                showSaveChanges.value = false
+            }
+        })
+    }else{
+        await receiveUser()
+        showSaveChanges.value = false
     }
 }
 
 function updateEmail(e){
     newEmail.value = e.target.innerText
+    target.value = 'email'
     showSaveChanges.value = e.target.innerText == cacheUser.value.email ? false : true;
 }
 function updatePassword(e){
-    showSaveChanges.value = e.target.innerText == cacheUser.value.login.password ? false: true;
+    target.value = 'senha'
+    showSaveChanges.value = e.target.innerText == cacheUser.value.senha ? false: true;
 }
 </script>
 
