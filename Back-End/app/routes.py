@@ -88,6 +88,11 @@ def usuario():
 def atualizarDado():
     coluna = request.args.get('target')
     token = request.args.get('token')
+    if(coluna == 'avatar_url'):
+        print(request.form.to_dict())
+        return {
+            "token": token
+        }
     valor = request.args.get('value')
     if(coluna == "senha"):
         valor = bcrypt.generate_password_hash(valor).decode("utf-8")
