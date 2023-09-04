@@ -1,6 +1,6 @@
 <template>
   <div class="adminContainer">
-    <LoginCard @get-data="getData"/>
+    <LoginCard @get-data="getData" :admin="true"/>
   </div>
 </template>
 <script setup>

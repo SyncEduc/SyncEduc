@@ -6,8 +6,9 @@ export default defineNuxtRouteMiddleware(
     if (process.client) {
       const loginStore = useLoginStore();
       const token = loginStore.getLocalStorageToken();
+      const target = loginStore.getLocalStorageTarget()
       if (token) {
-        await fetch(`http://127.0.0.1:5000/verificarToken?token=${token}`, {
+        await fetch(`http://127.0.0.1:5000/verificarToken?token=${token}&target=${target}`, {
           method: "POST",
         }).then(res=>res.json()).then(res=>{
           if(Object.keys(res).includes("message")){
@@ -15,6 +16,7 @@ export default defineNuxtRouteMiddleware(
           }else{
               loginStore.updateLoginState(true)
               localStorage.setItem("_gtk", res.token)
+              localStorage.setItem("_gtt", res.target)
           }
         })
       } else {

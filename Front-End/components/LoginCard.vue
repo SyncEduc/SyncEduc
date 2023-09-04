@@ -3,7 +3,7 @@
     <BackButton class="absolute left-5 top-5"/>
     <img src="../assets/images/logo.webp" alt="logo">
     <div class="InputGroup">
-      <input v-model="form.name" :class="{'border-green-500': form.name.length >=1 && isRegister}" class="border-gray-300 focus:border-black" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
+      <input v-if="!admin" v-model="form.name" :class="{'border-green-500': form.name.length >=1 && isRegister}" class="border-gray-300 focus:border-black" v-show="isRegister" type="text" name="name" placeholder="Nome Completo">
       <input v-model="form.email" :class="{
         'border-red-300':emailTest == false && isRegister,
         'border-gray-300 focus:border-black': !isRegister,
@@ -17,11 +17,11 @@
         <svg @click="seePassword = !seePassword" v-else xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24"><path fill="currentColor" d="M12 17.5c-3.8 0-7.2-2.1-8.8-5.5H1c1.7 4.4 6 7.5 11 7.5s9.3-3.1 11-7.5h-2.2c-1.6 3.4-5 5.5-8.8 5.5Z"/></svg>
       </div>
       <span class="text-red-500 text-xs" >{{ message }}</span>
-      <div class="flex flex-row gap-2" v-if="!isRegister">
-        <Switch @click-action="getSWitchValue"/>
+      <div class="flex flex-row gap-2" v-if="!isRegister && !admin" >
+        <Switch  @click-action="getSWitchValue"/>
         <p>Entrar como professor</p>
       </div>
-      <div class="optionText">
+      <div class="optionText" v-if="!admin">
         <p v-if="!isTeacher">
           {{isRegister ? 'Já tem uma conta? ' : 'Ainda não tem uma conta? '}} 
           <span @click="switchMode">{{ isRegister ? 'Fazer login' : 'Registre-se!' }}</span>
@@ -38,6 +38,8 @@
 <script setup>
 import { useUserStudentStore } from '~/store/userStudent'
 const studentStore = useUserStudentStore()
+const props = defineProps(["admin"])
+
 const isRegister = ref(false)
 const passwordTest = ref(false)
 const emailTest = ref(false)
@@ -62,42 +64,60 @@ const form = ref({
 
 async function sendForm(){
   form.value.isRegister = isRegister.value
-  if(isRegister.value){
-    if(form.value.name && form.value.email && form.value.birth &&  form.value.password && passwordTest.value && emailTest.value){
-      await fetch(`http://127.0.0.1:5000/registro?nome=${form.value.name}&email=${form.value.email}&senha=${form.value.password}&nascimento=${form.value.birth}`, {
-        method: 'POST'
-      }).then(res=>res.json()).then(res=>{
-        if("message" in res){
-          message.value = res.message
-          emailTest.value = false
-        }else{
-          localStorage.setItem("_gtk", res.token)
-          navigateTo('/')
-        }
-      })
-    }else{
-      message.value = 'Complete todos os dados!'
-    }
-  }else{
-    if(form.value.email && form.value.password){
-      if(isTeacher.value == false){
-        await fetch(`http://127.0.0.1:5000/login?opcao=aluno&email=${form.value.email}&senha=${form.value.password}`, {
-        method: "POST"
-        }).then(res=> res.json()).then(async res=>{
-          if(Object.keys(res).includes("message")){
+  localStorage.setItem("_gtt", isTeacher.value ? "professor" : "aluno")
+  if(!props.admin){
+    if(isRegister.value){
+      if(form.value.name && form.value.email && form.value.birth &&  form.value.password && passwordTest.value && emailTest.value){
+        await fetch(`http://127.0.0.1:5000/registro?nome=${form.value.name}&email=${form.value.email}&senha=${form.value.password}&nascimento=${form.value.birth}`, {
+          method: 'POST'
+        }).then(res=>res.json()).then(res=>{
+          if("message" in res){
             message.value = res.message
+            emailTest.value = false
           }else{
             localStorage.setItem("_gtk", res.token)
-            await studentStore.getUser()
+            localStorage.setItem("_gtt", res.target)
             navigateTo('/')
           }
         })
       }else{
-        
+        message.value = 'Complete todos os dados!'
       }
     }else{
-      message.value = 'Complete todos os dados!'
+      if(form.value.email && form.value.password){
+        if(isTeacher.value == false){
+          await fetch(`http://127.0.0.1:5000/login?opcao=aluno&email=${form.value.email}&senha=${form.value.password}`, {
+          method: "POST"
+          }).then(res=> res.json()).then(async res=>{
+            if(Object.keys(res).includes("message")){
+              message.value = res.message
+            }else{
+              localStorage.setItem("_gtk", res.token)
+              localStorage.setItem("_gtt", res.target)
+              await studentStore.getUser()
+              navigateTo('/')
+            }
+          })
+        }else{
+          
+        }
+      }else{
+        message.value = 'Complete todos os dados!'
+      }
     }
+  }else{
+    await fetch(`http://127.0.0.1:5000/login?email=${form.value.email}&senha=${form.value.password}&opcao=admin`, {
+      method: 'POST'
+    }).then(res=> res.json()).then(async res=>{
+      if(Object.keys(res).includes("message")){
+        message.value = res.message
+      }else{
+        localStorage.setItem("_gtk", res.token)
+        localStorage.setItem("_gtt", res.target)
+        await studentStore.getUser()
+        navigateTo('/')
+      }
+    })
   }
   
 
@@ -174,4 +194,4 @@ function redirectTeatcherToSupport(){
  @apply w-full h-max py-2 rounded-[25px] bg-[#6b70d6] 
  text-white text-xl hover:scale-105 transition-all
 }
-</style>
+</style>~/store/user

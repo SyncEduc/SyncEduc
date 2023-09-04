@@ -15,21 +15,15 @@ export const useCourseStore = defineStore({
   },
 
   actions: {
-    fetchCategories(){
-      this.categories = [
-        {
-          name: 'Front-end',
-          id: 7834897
-        },
-        {
-          name: 'Back-end',
-          id: 1928391
-        },
-        {
-          name: 'Audio-Visual',
-          id:73784134 
-        }
-      ]
+    async fetchCategories(){
+      await fetch(`http://127.0.0.1:5000/categorias`).then(res=>res.json()).then(res=>{
+        this.categories = res.categories.map(category=>{
+          return{
+            id: category[0],
+            name: category[1]
+          }
+        })
+      })
     },
     fetchCourses() {
       this.courses = [

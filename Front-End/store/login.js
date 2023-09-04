@@ -18,6 +18,9 @@ export const useLoginStore = defineStore({
         },
         getLocalStorageToken: () =>{
             return localStorage.getItem('_gtk')
+        },
+        getLocalStorageTarget: ()=>{
+            return localStorage.getItem("_gtt")
         }
     }
 })

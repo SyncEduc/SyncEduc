@@ -4,17 +4,19 @@
         <Modal v-if="showModalAvatar" @click-close="()=>showModalAvatar = false">
             <img :src="viewImageSource" class="max-w-[250px] w-full max-h-[250px] rounded-lg" alt="">
             <p v-if="viewImageSource != ''" class="text-center break-words">{{ nameAvatarFile }}</p>
-            <label v-if="viewImageSource == ''" for="dropzone-file" class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                </svg>
+            <form  id="form" method="post" :action="`http://127.0.0.1:5000/atualizarDado?token=${cacheUser.token}&target=${target}`">
+                <label v-if="viewImageSource == ''" for="dropzone-file" class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
 
-                <h2 class="mt-4 text-xl font-medium text-gray-700 tracking-wide">Enviar imagem</h2>
+                    <h2 class="mt-4 text-xl font-medium text-gray-700 tracking-wide">Enviar imagem</h2>
 
-                <p class="mt-2 text-gray-500 tracking-wide">Envie sua imagem ou arraste até aqui. </p>
+                    <p class="mt-2 text-gray-500 tracking-wide">Envie sua imagem ou arraste até aqui. </p>
 
-                <input  id="dropzone-file" name="image" @change="loadAvatarImage" type="file" class="hidden" />
-            </label>
+                    <input  id="dropzone-file" name="image" @change="loadAvatarImage" type="file" class="hidden" />
+                </label>
+            </form>
         </Modal>
         <div class="informations">
             <template v-if="loaded">
@@ -43,7 +45,7 @@
     </div>
 </template>
 <script setup>
-import { useUserStudentStore } from '../../store/userStudent';
+import { useUserStudentStore } from '../../store/user';
 const studentStore = useUserStudentStore();
 const loaded = ref(false);
 const showSaveChanges = ref(false);
@@ -64,6 +66,7 @@ function loadAvatarImage(e){
 async function receiveUser(){
     await studentStore.getUser()
     cacheUser.value = studentStore.user
+    cacheUser.value.token = localStorage.getItem("_gtk")
     form.value.name = cacheUser.value.nome
     form.value.description = cacheUser.value.descricao
     viewImageSource.value = ''
@@ -88,21 +91,14 @@ async function receiveSaveChangeEvent(event){
                 }
             })
         }else{
-            console.log('awdawd')
-            const data = new FormData()
-            data.append('image', currentFile.value)
-            console.log(viewImageSource.value)
-            await fetch(`http://127.0.0.1:5000/atualizarDado?token=${localStorage.getItem('_gtk')}&target=${target.value}`, {
-                method: "POST",
-                headers:{
-                    "Content-Type": 'image/jpeg'
-                },
-                body: data
-
-            })
+            document.querySelector("#form").submit()
         }
         
     }
+}
+
+function submit(){
+    return false
 }
 
 const form = ref({
@@ -180,4 +176,4 @@ onMounted(async ()=>{
 .profileContainer > .informations > .edit > .description{
     @apply text-sm w-max
 }
-</style>
+</style>../../store/user

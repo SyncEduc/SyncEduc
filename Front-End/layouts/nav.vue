@@ -6,6 +6,7 @@
             <img src="../assets/images/HorizontalLogo.webp" class="w-[120px] h-[56px]"/>
           </div>
           <div class="NavPcResolution">
+            <NavItem @click-action="redirect('/admin/config')">Admin</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
@@ -31,9 +32,13 @@
               </div>
             </NavItem>
             <NavItem v-if="!loginStore.isLogged" @click-action="redirect('/login')">Login/Registro</NavItem>
+            <NavItem v-else>
+              <img @click="navigateTo('/config/user')" class="h-6 w-6 rounded-full border border-black/50 p-[0.5px] hover:scale-[1.1] transition-all" :src="studentStore.user.avatar_url == null ? 'https://i.imgur.com/MB58STs.png': studentStore.user.avatar_url">
+            </NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
+            <NavItem @click-action="redirect('/admin/config')">Admin</NavItem>
           </div>
       </div>
     </Nav>
@@ -45,10 +50,11 @@
 import AuthCookie from '~/components/authCookie.vue';
 import {useDrawerStore} from '../store/drawer'
 import { useLoginStore } from '~/store/login';
-import { useUserStudentStore } from '~/store/userStudent';
+import { useUserStudentStore } from '~/store/user';
 const studentStore = useUserStudentStore()
 const loginStore = useLoginStore()
 const drawerStore = useDrawerStore()
+const _gtt = ref('')
 function redirect(route){
   navigateTo(route)
 }
@@ -59,6 +65,7 @@ onMounted(() => {
     window.addEventListener('resize', ()=>{
       windowWidth.value = window.innerWidth
     })
+    _gtt.value = localStorage.getItem("_gtt")
 })
 </script>
 <style scoped>
@@ -100,4 +107,4 @@ div.SeparatorContainer > div.drawer{
   bg-white shadow-lg
 }
 
-</style>
+</style>~/store/user

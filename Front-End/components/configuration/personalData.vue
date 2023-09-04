@@ -17,7 +17,7 @@
     </div>
 </template>
 <script setup>
-import {useUserStudentStore} from '../../store/userStudent';
+import {useUserStudentStore} from '../../store/user';
 const studentStore = useUserStudentStore();
 const cacheUser = ref({})
 const showSaveChanges = ref(false)
@@ -77,4 +77,4 @@ function updatePassword(e){
     @apply p-1 outline-none border border-transparent transition-all rounded-lg focus:border-black/50
 }
 
-</style>
+</style>../../store/user
