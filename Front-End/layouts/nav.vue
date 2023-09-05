@@ -6,13 +6,13 @@
             <img src="../assets/images/HorizontalLogo.webp" class="w-[120px] h-[56px]"/>
           </div>
           <div class="NavPcResolution">
-            <NavItem @click-action="redirect('/admin/config')">Admin</NavItem>
+            <NavItem v-if="_gtt == 'admin'" @click-action="redirect('/admin/config')">Admin</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
             <NavItem v-if="!loginStore.isLogged" @click-action="redirect('/login')">Login/Registro</NavItem>
             <NavItem v-else>
-              <img @click="navigateTo('/config/user')" class="h-6 w-6 rounded-full border border-black/50 p-[0.5px] hover:scale-[1.1] transition-all" :src="studentStore.user.avatar_url == null ? 'https://i.imgur.com/MB58STs.png': studentStore.user.avatar_url">
+              <img @click="navigateTo('/config/user')" class="h-10 w-10 rounded-full border border-black/50 p-[0.5px] transition-all" :src="studentStore.user.avatar_url == null ? 'https://i.imgur.com/MB58STs.png': studentStore.user.avatar_url">
             </NavItem>
           </div>
           <div class="menuButton" v-if="windowWidth < 1024">
@@ -33,12 +33,12 @@
             </NavItem>
             <NavItem v-if="!loginStore.isLogged" @click-action="redirect('/login')">Login/Registro</NavItem>
             <NavItem v-else>
-              <img @click="navigateTo('/config/user')" class="h-6 w-6 rounded-full border border-black/50 p-[0.5px] hover:scale-[1.1] transition-all" :src="studentStore.user.avatar_url == null ? 'https://i.imgur.com/MB58STs.png': studentStore.user.avatar_url">
+              <img @click="navigateTo('/config/user')" class="h-10 w-10 rounded-full border border-black/50 p-[0.5px] transition-all" :src="studentStore.user.avatar_url == null ? 'https://i.imgur.com/MB58STs.png': studentStore.user.avatar_url">
             </NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
-            <NavItem @click-action="redirect('/admin/config')">Admin</NavItem>
+            <NavItem v-if="_gtt == 'admin'" @click-action="redirect('/admin/config')">Admin</NavItem>
           </div>
       </div>
     </Nav>
@@ -91,7 +91,7 @@ div.SeparatorContainer > div{
 }
 
 div.SeparatorContainer > div.NavPcResolution{
-  @apply hidden lg:flex
+  @apply hidden lg:flex items-center
 }
 @media (min-width: 1024px) {
   .menuButton{

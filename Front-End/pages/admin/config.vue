@@ -26,14 +26,73 @@
                     </template>
                 </div>
             </div>
+            <div class="teacher">
+                <h1 class="w-full text-center text-2xl"> Adicionar professor</h1>
+                <input v-model="newTeacher.name" type="text" placeholder="Nome do professor">
+                <input v-model="newTeacher.email" type="email" placeholder="Email">
+                <input v-model="newTeacher.password" type="text" placeholder="Senha">
+                <input v-model="newTeacher.imgURL" type="text" placeholder="Link para foto de perfil">
+                <Dropdown @get-select="(event) => selectedCategory = event" :list="courseStore.getCategoriesList">{{ selectedCategory.name }}</Dropdown>
+                <p>{{ selectedCategory.name }}</p>
+                <button @click="sendNewTeacher">Enviar</button>
+                <div v-if="showAlert" class="alert" :class="alertType">{{ alertMessage }}</div>
+            </div>
         </div>
     </NuxtLayout>
 </template>
 <script setup>
 import { useCourseStore } from '~/store/courses';
+import { useLoginStore } from '~/store/login';
+definePageMeta({
+    middleware: ()=>{
+        const loginStore = useLoginStore()
+        if(process.client){
+            if(loginStore.isLogged && localStorage.getItem("_gtt") == "admin"){
+                return true
+            }else{
+                return navigateTo('/')
+            }
+        }
+    }
+})
+
 const courseStore = useCourseStore()
 const newCategory = ref('')
+const newTeacher = ref({
+    name: '',
+    email: '',
+    password: '',
+    imgURL: ''
+})
 
+const selectedCategory = ref({
+    name: 'Selecione uma categoria',
+    id: 12301273012
+})
+
+
+
+async function sendNewTeacher(){
+    const token = localStorage.getItem("_gtk")
+    await fetch(`http://127.0.0.1:5000/registrarProfessor?category=${selectedCategory.value.id}&token=${token}&name=${newTeacher.value.name}&email=${newTeacher.value.email}&password=${newTeacher.value.password}&imageURL=${newTeacher.value.imgURL}`, {method: "POST"}).then(res=>{
+        return res.json()
+    }).then(res=>{
+        if("message" in res){
+            activateAlert(res.message)
+        }
+    })
+}
+
+const showAlert = ref(false)
+const alertMessage = ref('')
+const alertType = ref('success')
+function activateAlert(message){
+    alertMessage.value = message,
+    showAlert.value = true
+    setTimeout(()=>{
+        showAlert.value = false
+    }, 5000)
+}
 async function createCategory(){
     const token = localStorage.getItem("_gtk")
     await fetch(`http://127.0.0.1:5000/registrarCategoria?name=${newCategory.value}&token=${token}`, {method: "POST"})
@@ -52,14 +111,13 @@ async function deleteCategory(id){
 
 onMounted(async()=>{
     await courseStore.fetchCategories()
-    console.log(courseStore.categories)
 })
 
 
 </script>
 <style scoped>
 .adminConfigContainer{
-    @apply w-screen min-h-screen h-max pt-24 px-6 pb-4 flex flex-col gap-12 items-center
+    @apply w-full min-h-screen h-max mt-20 p-4 flex flex-col gap-12 items-center
 }
 .adminConfigContainer > .Categories {
     @apply w-full max-w-[40rem] rounded-lg p-4 flex flex-col gap-6 items-center justify-center border border-black/10
@@ -74,7 +132,7 @@ onMounted(async()=>{
     @apply w-full rounded-lg border border-black/50 outline-none p-2
 }
 .adminConfigContainer > .Categories > .inputGroup > button{
-    @apply bg-[#50efbcff]/50 border border-[#28a17b] p-2 rounded-lg hover:scale-[1.1]
+    @apply bg-[#50efbcff]/50 border border-[#28a17b] p-2 rounded-lg hover:scale-[1.1] transition-all
 }
 .adminConfigContainer > .Categories > .list{
     @apply w-full flex flex-col gap-2 max-w-[30rem]
@@ -87,5 +145,28 @@ onMounted(async()=>{
 }
 .adminConfigContainer > .Categories > .list > .category > div{
     @apply flex flex-row gap-2 
+}
+
+.adminConfigContainer > .teacher{
+    @apply w-full max-w-[40rem] rounded-lg p-4 flex flex-row flex-wrap gap-6 items-center justify-center sm:justify-between border border-black/10
+}
+
+.adminConfigContainer > .teacher > input{
+    @apply max-w-full w-[48%] min-w-[47%] p-2 border border-black/50 rounded-lg outline-none
+}
+.adminConfigContainer > .teacher > p{
+    @apply max-w-full w-[48%] min-w-[47%] border p-2 border-[#3e44b8] bg-[#858bfdff]/50 text-[#292d7e] rounded-lg text-center
+}
+.adminConfigContainer > .teacher > button{
+    @apply w-full bg-[#50efbcff]/50 border border-[#28a17b] text-[#154133] p-2 rounded-lg hover:scale-[1.03] transition-all 
+}
+.adminConfigContainer > .teacher > .alert{
+    @apply w-full p-6 rounded-lg text-lg text-center
+}
+.adminConfigContainer > .teacher > .alert.success{
+    @apply bg-[#50efbcff]/20 border border-[#28a17b]/75 p-2 rounded-lg transition-all  text-[#28a17b]
+}
+.adminConfigContainer > .teacher > .alert.error{
+    @apply bg-[#a12828]/20 border border-[#a12828]/75 p-2 rounded-lg transition-all  text-[#a12828]
 }
 </style>

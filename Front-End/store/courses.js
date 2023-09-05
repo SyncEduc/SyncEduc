@@ -31,7 +31,7 @@ export const useCourseStore = defineStore({
           name: 'Curso de edição de video',
           desc: 'Curso introdutório onde você vai poder absorver conteudos sobre edição de videosCurso introdutório onde você vai poder absorver conteudos sobre ediçãa',
           image: 'https://www.sagicapriprodutora.com.br/images/curso_de_edicao_de_videos_7.jpeg',
-          id: 19231231234123,
+          id: 3,
           stars: 4,
           lessons:[
             {
@@ -54,8 +54,8 @@ export const useCourseStore = defineStore({
               id: 73784134
             },
             {
-              name: 'Back-end',
-              id: 1928391
+              name: 'teste',
+              id: 3
             },
             
             {

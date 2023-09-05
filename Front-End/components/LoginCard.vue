@@ -36,7 +36,7 @@
   </div>
 </template>
 <script setup>
-import { useUserStudentStore } from '~/store/userStudent'
+import { useUserStudentStore } from '~/store/user'
 const studentStore = useUserStudentStore()
 const props = defineProps(["admin"])
 
@@ -52,6 +52,7 @@ function switchMode(){
 }
 function getSWitchValue(event){
   isTeacher.value = event.value
+  localStorage.setItem("_gtt", isTeacher.value ? "professor" : "aluno")
   emit('get-switch', isTeacher.value)
 }
 const form = ref({
@@ -64,7 +65,6 @@ const form = ref({
 
 async function sendForm(){
   form.value.isRegister = isRegister.value
-  localStorage.setItem("_gtt", isTeacher.value ? "professor" : "aluno")
   if(!props.admin){
     if(isRegister.value){
       if(form.value.name && form.value.email && form.value.birth &&  form.value.password && passwordTest.value && emailTest.value){
@@ -99,7 +99,18 @@ async function sendForm(){
             }
           })
         }else{
-          
+          await fetch(`http://127.0.0.1:5000/login?opcao=professor&email='${form.value.email}'&senha=${form.value.password}`, {
+          method: "POST"
+          }).then(res=> res.json()).then(async res=>{
+            if(Object.keys(res).includes("message")){
+              message.value = res.message
+            }else{
+              localStorage.setItem("_gtk", res.token)
+              localStorage.setItem("_gtt", res.target)
+              await studentStore.getUser()
+              navigateTo('/')
+            }
+          })
         }
       }else{
         message.value = 'Complete todos os dados!'

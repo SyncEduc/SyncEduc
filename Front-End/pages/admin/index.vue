@@ -4,9 +4,9 @@
   </div>
 </template>
 <script setup>
-function getData(form){
-  console.log(form)
-}
+onMounted(()=>{
+  localStorage.setItem("_gtt", "admin")
+})
 </script>
 <style scoped>
 .adminContainer{

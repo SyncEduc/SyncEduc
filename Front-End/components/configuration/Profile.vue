@@ -2,21 +2,11 @@
     <div class="profileContainer">
         <ConfigurationSaveChanges v-if="showSaveChanges" @action-click="receiveSaveChangeEvent"/>
         <Modal v-if="showModalAvatar" @click-close="()=>showModalAvatar = false">
-            <img :src="viewImageSource" class="max-w-[250px] w-full max-h-[250px] rounded-lg" alt="">
-            <p v-if="viewImageSource != ''" class="text-center break-words">{{ nameAvatarFile }}</p>
-            <form  id="form" method="post" :action="`http://127.0.0.1:5000/atualizarDado?token=${cacheUser.token}&target=${target}`">
-                <label v-if="viewImageSource == ''" for="dropzone-file" class="mx-auto cursor-pointer flex w-full max-w-lg flex-col items-center rounded-xl border-2 border-dashed border-blue-400 bg-white p-6 text-center">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
-                    </svg>
-
-                    <h2 class="mt-4 text-xl font-medium text-gray-700 tracking-wide">Enviar imagem</h2>
-
-                    <p class="mt-2 text-gray-500 tracking-wide">Envie sua imagem ou arraste até aqui. </p>
-
-                    <input  id="dropzone-file" name="image" @change="loadAvatarImage" type="file" class="hidden" />
-                </label>
-            </form>
+            <div class="flex flex-col gap-2">
+                <img :src="form.avatar_url" alt="">
+                <input v-model="form.avatar_url" class="p-2 rounded-lg border border-black/50 outline-none" type="text" placeholder="Link da imagem aqui">
+                <p class="text-xs text-black/50">Recomendamos links do <a class="text-blue-400" target="_blank" href="https://imgur.com/">imgur.com</a></p>
+            </div>
         </Modal>
         <div class="informations">
             <template v-if="loaded">
@@ -50,18 +40,9 @@ const studentStore = useUserStudentStore();
 const loaded = ref(false);
 const showSaveChanges = ref(false);
 const cacheUser = ref({});
-const nameAvatarFile = ref('')
-const viewImageSource = ref('')
 const showModalAvatar = ref(false)
-const currentFile = ref({})
 const target = ref('')
-function loadAvatarImage(e){
-    currentFile.value = e.target.files[0];
-    viewImageSource.value = URL.createObjectURL(currentFile.value)
-    nameAvatarFile.value = currentFile.value.name
-    target.value = "avatar_url"
-    
-}
+
 
 async function receiveUser(){
     await studentStore.getUser()
@@ -69,48 +50,41 @@ async function receiveUser(){
     cacheUser.value.token = localStorage.getItem("_gtk")
     form.value.name = cacheUser.value.nome
     form.value.description = cacheUser.value.descricao
-    viewImageSource.value = ''
+    form.value.avatar_url = cacheUser.value.avatar_url
 }
 async function receiveSaveChangeEvent(event){
     if(!event.type){
         await receiveUser()
         showModalAvatar.value = false
-        viewImageSource.value = ''
-        nameAvatarFile.value = ''
         showSaveChanges.value = false
     }else{
+        const type = localStorage.getItem("_gtt")
         cacheUser.value.nome = form.value.name
         cacheUser.value.descricao = form.value.description
-        if(target.value != "avatar_url"){
-            await fetch(`http://127.0.0.1:5000/atualizarDado?token=${localStorage.getItem('_gtk')}&target=${target.value}&value=${cacheUser.value[target.value]}`, {
+        cacheUser.value.avatar_url = form.value.avatar_url
+        await fetch(`http://127.0.0.1:5000/atualizarDado?opcao=${type}&token=${localStorage.getItem('_gtk')}&target=${target.value}&value=${cacheUser.value[target.value]}`, {
             method: 'POST'
-            }).then(res=> res.json()).then(async res=>{
-                if('token' in res){
-                    await receiveUser()
-                    showSaveChanges.value = false
-                }
-            })
-        }else{
-            document.querySelector("#form").submit()
-        }
-        
+        }).then(res=> res.json()).then(async res=>{
+            if('token' in res){
+                await receiveUser()
+                showSaveChanges.value = false
+            }
+        })
     }
 }
 
-function submit(){
-    return false
-}
 
 const form = ref({
     name: '',
     description: '',
+    avatar_url: ''
 })
 
-watch(viewImageSource, ()=>{
-    if(viewImageSource.value!= ''){
+watch(()=> form.value.avatar_url, ()=>{
+    if(form.value.avatar_url != ''){
+        target.value = "avatar_url"
         showSaveChanges.value = true
     }else{
-        target.value = "avatar_url"
         showSaveChanges.value = false
     }
 })

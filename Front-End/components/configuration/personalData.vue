@@ -36,9 +36,10 @@ onMounted(async ()=>{
 })
 async function receiveSaveChangesEvent(e){
     if(e.type){
+        const type = localStorage.getItem("_gtt")
         cacheUser.value.email = newEmail.value
         cacheUser.value.senha = newPassword.value
-        await fetch(`http://127.0.0.1:5000/atualizarDado?token=${localStorage.getItem('_gtk')}&target=${target.value}&value=${cacheUser.value[target.value]}`, {
+        await fetch(`http://127.0.0.1:5000/atualizarDado?opcao=${type}&token=${localStorage.getItem('_gtk')}&target=${target.value}&value=${cacheUser.value[target.value]}`, {
             method: 'POST'
         }).then(res=> res.json()).then(async res=>{
             if('token' in res){

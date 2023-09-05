@@ -7,6 +7,7 @@
 <script setup>
 function logout(){
     localStorage.removeItem("_gtk")
+    localStorage.removeItem("_gtt")
     navigateTo("/")
 }
 </script>

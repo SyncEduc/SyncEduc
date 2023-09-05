@@ -4,7 +4,8 @@ export const useLoginStore = defineStore({
     id: 'login',
     state: () => {
         return {
-            isLogged: true
+            isLogged: true,
+            currentTarget: ''
         }
     },
 
@@ -15,6 +16,9 @@ export const useLoginStore = defineStore({
     actions: {
         updateLoginState(payload){
             this.isLogged = payload;
+        },
+        setTarget(payload){
+            
         },
         getLocalStorageToken: () =>{
             return localStorage.getItem('_gtk')
