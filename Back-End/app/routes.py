@@ -138,6 +138,10 @@ def usuario():
             "descricao": rows[0][5],
             "avatar_url": rows[0][6]
         }
+    else:
+        return {
+        "message": "token invalido"
+    }
     
 
 @app.route("/user")
