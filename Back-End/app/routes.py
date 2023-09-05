@@ -218,3 +218,11 @@ def registrarProfessor():
         return{
             "message": "Professor(a) cadastrado com sucesso!"
         }
+    
+@app.route("/professores")
+def professores():
+    cursor.execute("SELECT * FROM tb_professores")
+    teachers = cursor.fetchall()
+    return {
+        "teachers": teachers
+    }
