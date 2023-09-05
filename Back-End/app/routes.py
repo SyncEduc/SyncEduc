@@ -50,6 +50,18 @@ def verificarToken():
             return {
                 "message": "Token invalido"
             }
+    elif(target == "professor"):
+        cursor.execute("SELECT * FROM tb_professores WHERE token = ?", [f"{token}"])
+        rows = cursor.fetchall()
+        if(len(rows)==1):
+            return {
+                "token": token,
+                "target": target
+            }
+        else:
+            return {
+                "message": "Token invalido"
+            }
         
     else:
         cursor.execute("SELECT * FROM tb_admin WHERE token = ?", [f"{token}"])
@@ -71,33 +83,39 @@ def login():
     senha = request.args.get("senha")
     opcao = request.args.get("opcao")
     if(opcao == "aluno"):
-        cursor.execute(f"SELECT * FROM tb_estudantes WHERE email = ?", [f"{email}"])
-        rows = cursor.fetchall()
-        if(len(rows) == 1):
-            valid = bcrypt.check_password_hash(rows[0][4], senha)
-            if(valid):
-                return {
-                    "token": rows[0][-1],
-                    "target": opcao
-                }
-            else:
-                return {
-                    "message": "Dados invalidos"
-                }
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE email = ?", [email])
+    elif(opcao == "professor"):
+        print("professor")
+        cursor.execute(f"SELECT * FROM tb_professores WHERE email = {email}")
     else:
-        cursor.execute(f"SELECT * FROM tb_admin WHERE email = ?", [f"{email}"])
-        rows = cursor.fetchall()
-        if(len(rows) == 1):
-            valid = True if(rows[0][4] == senha) else False
-            if(valid):
-                return {
-                    "token": rows[0][-1],
-                    "target": opcao
-                }
-            else:
-                return {
-                    "message": "Dados invalidos"
-                }
+        cursor.execute(f"SELECT * FROM tb_admin WHERE email = ?", [email])
+    rows = cursor.fetchall()
+    valid = ''
+    if(len(rows)==1):
+        if(opcao == "aluno"):
+            valid = bcrypt.check_password_hash(rows[0][4], senha)
+        elif(opcao == "admin"):
+            valid = True if(senha == rows[0][4]) else False
+        else:
+            valid = True if(bcrypt.check_password_hash(rows[0][3], senha)) else False
+    else:
+        return {
+            "message": "Dados invalidos"
+        }
+    if(len(rows) == 1):
+        if(valid):
+            return {
+                "token": rows[0][-1],
+                "target": opcao
+            }
+        else:
+            return {
+                "message": "Dados invalidos"
+            }
+    else:
+        return{
+            "message": "Erro Interno"
+        }
 
 @app.route("/usuario", methods=["POST"])
 def usuario():
@@ -105,38 +123,40 @@ def usuario():
     token = request.args.get("token")
     if(tipo == "aluno"):
         cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = ?", [f"{token}"])
-        rows = cursor.fetchall()
-        if(len(rows)==1):
-            return {
-                "nome": rows[0][1],
-                "email": rows[0][2],
-                "nascimento": rows[0][3],
-                "senha": rows[0][4],
-                "descricao": rows[0][5],
-                "avatar_url": rows[0][6]
-            }
+    elif(tipo == "professor"):
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = ?", [f"{token}"])
     else:
         cursor.execute(f"SELECT * FROM tb_admin WHERE token = ?", [f"{token}"])
-        rows = cursor.fetchall()
-        if(len(rows)==1):
-            return {
-                "nome": rows[0][1],
-                "email": rows[0][2],
-                "nascimento": rows[0][3],
-                "senha": rows[0][4],
-                "descricao": rows[0][5],
-                "avatar_url": rows[0][6]
-            }
+    rows = cursor.fetchall()
+    if(len(rows)==1):
+        return {
+            "nome": rows[0][1],
+            "email": rows[0][2],
+            "nascimento": rows[0][3],
+            "senha": rows[0][4],
+            "descricao": rows[0][5],
+            "avatar_url": rows[0][6]
+        }
         
 @app.route('/atualizarDado', methods=["POST"])
 def atualizarDado():
+    opcao = request.args.get('opcao')
     coluna = request.args.get('target')
     token = request.args.get('token')
     valor = request.args.get('value')
-    if(coluna == "senha"):
+    print(opcao)
+    if(coluna == "senha" and opcao != "admin"):
         valor = bcrypt.generate_password_hash(valor).decode("utf-8")
-    cursor.execute(f"UPDATE tb_estudantes  SET {coluna} = ? WHERE token = ?", (f"{valor}", f"{token}"))
-    connection.commit()
+
+    if(opcao == "aluno"):
+        cursor.execute(f"UPDATE tb_estudantes  SET {coluna} = ? WHERE token = ?", (f"{valor}", f"{token}"))
+        connection.commit()
+    elif(opcao == "professor"):
+        cursor.execute(f"UPDATE tb_professores  SET {coluna} = ? WHERE token = ?", (f"{valor}", f"{token}"))
+        connection.commit()
+    else:
+        cursor.execute(f"UPDATE tb_admin  SET {coluna} = ? WHERE token = ?", (f"{valor}", f"{token}"))
+        connection.commit()
     return {
         "token": token
     }
@@ -162,7 +182,7 @@ def deletarCategoria():
     if(len(users) ==1):
         cursor.execute("DELETE FROM tb_categorias WHERE id = ?", [f"{id}"])
         connection.commit()
-        return{
+        return {
             "message": "Categoria deletada com sucesso"
         }
 
@@ -174,3 +194,27 @@ def categorias():
     return{
         "categories": categories
     }
+
+@app.route("/registrarProfessor", methods=["POST"])
+def registrarProfessor():
+    token = request.args.get('token')
+    nome = request.args.get('name')
+    email = request.args.get('email')
+    senha = request.args.get('password')
+    imageURL = request.args.get('imageURL')
+    categoria_id = request.args.get("category")
+    encrypt = bcrypt.generate_password_hash(senha).decode("utf-8")
+    cursor.execute("SELECT * FROM tb_admin WHERE token = ?", [f"{token}"])
+    jwtPayload = {
+        'nome': nome,
+        'email': email,
+        'encrypt': encrypt
+    }
+    token_professor = jwt.encode({"some": f"{jwtPayload}"}, "secret", algorithm="HS256")
+    users = cursor.fetchall()
+    if(len(users) ==1):
+        cursor.execute("INSERT INTO tb_professores(nome, email, senha, avatar_url, token, categoria) values(?,?,?,?,?,?)", [f"{nome}", f"{email}", f"{encrypt}", f"{imageURL}", f"{token_professor}", f"{categoria_id}"])
+        connection.commit()
+        return{
+            "message": "Professor(a) cadastrado com sucesso!"
+        }
