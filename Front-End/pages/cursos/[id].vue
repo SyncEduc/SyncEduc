@@ -2,7 +2,7 @@
   <NuxtLayout name="nav">
     <div class="courseContainer">
       <section class="video realtive">
-        <VideoPlayer v-if="renderComponent" :source="currentCourse.lessons[currentLesson].videoSource" />
+        <iframe v-if="renderComponent" :src="currentCourse.lessons[currentLesson].videoSource" class="rounded-xl" width="100%" height="520" title="If I Had a Heart - Tal Barr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </section>
       <section class="aboutLesson">
         <div class="lessonInfos">
@@ -41,10 +41,10 @@
       <section class="commentsContainer">
         <div class="newComment">
           <div class="avatar">
-            <img src="https://i.pinimg.com/originals/75/82/09/7582098de480133df2fed86d2de7637b.jpg" />
+            <img :src="userStore.user.avatar_url" />
           </div>
           <div class="comment">
-            <h1>Luis Davi</h1>
+            <h1>{{ userStore.user.nome }}</h1>
             <div class="commentForm">
               <textarea maxlength="300" class="textComment" placeholder="Seu Comentário" v-model="newComment"></textarea>
               <button class="submit" @click="sendComment">
@@ -107,10 +107,11 @@
 <script setup>
 import { useCourseCommentsStore } from '~/store/courseComments'
 import { useCourseStore } from '~/store/courses'
+import { useUserStudentStore } from '~/store/user';
 
 const commentsStore = useCourseCommentsStore()
 const courseStore = useCourseStore()
-
+const userStore = useUserStudentStore()
 const route = useRoute()
 const currentLesson = ref(1)
 const currentCourse = ref({
@@ -165,11 +166,13 @@ function openReply(comment){
 
 }
 
-function sendComment(){
-  commentsStore.addComments(newComment.value)
+async function sendComment(){
+  commentsStore.addComments(currentCourse.value.id,newComment.value)
+  commentsStore.fetchComments(currentCourse.value.id)
 }
-function sendResponse(comment_id){
+async function sendResponse(comment_id){
   commentsStore.addResponse({target: comment_id, message: newResponse})
+  commentsStore.fetchComments(currentCourse.value.id)
 }
 async function updateCurentLesson(){
   currentLesson.value = route.query.aula -1
@@ -177,15 +180,17 @@ async function updateCurentLesson(){
 onUpdated(()=>{
   updateCurentLesson()
 })
-onMounted(() => {
-  courseStore.fetchCourses()
+onMounted(async () => {
+  await courseStore.fetchCourses()
+  await courseStore.fetchLessons()
   if(!(parseInt(route.query.aula) <= currentCourse.value.lessons.length)){
     return navigateTo(`/cursos/${route.params.id}?aula=1`)
   }
   currentCourse.value = courseStore.getCoursesList.find(c=> c.id == route.params.id)
   renderComponent.value = true
+  currentCourse.value.lessons = courseStore.getLessonByCourse(currentCourse.value.id)
   updateCurentLesson()
-  commentsStore.fetchComments()
+  commentsStore.fetchComments(currentCourse.value.id)
 })
 watch(newComment, () => {
   charLimit.value = 300 - newComment.value.length

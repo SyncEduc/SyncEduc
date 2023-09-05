@@ -7,6 +7,7 @@
           </div>
           <div class="NavPcResolution">
             <NavItem v-if="_gtt == 'admin'" @click-action="redirect('/admin/config')">Admin</NavItem>
+            <NavItem v-if="_gtt == 'professor'" @click-action="redirect('/cursos/criar')">Gerenciar cursos</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
             <NavItem @click-action="redirect('/cursos')">Cursos</NavItem>
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
@@ -60,12 +61,13 @@ function redirect(route){
 }
 
 const windowWidth = ref(0)
-onMounted(() => {
+onMounted(async() => {
     windowWidth.value = window.innerWidth
     window.addEventListener('resize', ()=>{
       windowWidth.value = window.innerWidth
     })
     _gtt.value = localStorage.getItem("_gtt")
+    studentStore.getUser()
 })
 </script>
 <style scoped>

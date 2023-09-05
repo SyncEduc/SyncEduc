@@ -10,7 +10,7 @@
         </template>
       </div>
     </div>
-    <button @click="navigateTo(`/cursos/sobre/${id}`)">Inscreva-se</button>
+    <button @click="navigateTo(`/cursos/sobre/${id}`)">Saiba mais</button>
   </div>
 </template>
 <script setup>

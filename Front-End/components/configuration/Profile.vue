@@ -26,8 +26,8 @@
                     <EditIcon/>
                 </div>
                 <div class="edit">
-                    <p class="description" data-edit="edit" contenteditable="true" 
-                    @input="(e)=> form.description = e.target.innerText">{{ form.description || 'Sem descrição...' }}</p>
+                    <p class="description" data-edit="edit" contenteditable="true"  placeholder="Sua Descrição aqui"
+                    @input="(e)=> form.description = e.target.innerText">{{ form.description}}</p>
                     <EditIcon/>
                 </div>
             </template>
@@ -139,15 +139,19 @@ onMounted(async ()=>{
     @apply bottom-0
 }
 .profileContainer > .informations > .edit{
-    @apply flex flex-row gap-1 items-center max-w-full md:max-w-[450px]
+    @apply flex flex-row gap-1 items-start max-w-full md:max-w-[450px]
 }
 .profileContainer > .informations > .edit > *[data-edit="edit"]  {
-    @apply p-1 outline-none border border-transparent transition-all rounded-lg focus:border-black/50
+    @apply p-1 outline-none border transition-all rounded-lg border-black/50 cursor-text
+}
+.profileContainer > .informations > .edit > *[placeholder]:empty:before {
+    content: attr(placeholder);
+    color: #555; 
 }
 .profileContainer > .informations > .edit > .name{
     @apply text-xl text-center
 }
 .profileContainer > .informations > .edit > .description{
-    @apply text-sm w-max
+    @apply text-sm min-w-[13rem] w-max h-16
 }
 </style>../../store/user

@@ -28,7 +28,7 @@
                           <div class="teacherCategory">{{ category.name }}</div>
                         </template>
                       </div>
-                      <div class="stars">
+                      <!-- <div class="stars">
                         <template v-for="star in teacher.stars" :key="star">
                           <svg class="text-yellow-500" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
                             viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
                               d="m14.43 10l-1.47-4.84c-.29-.95-1.63-.95-1.91 0L9.57 10H5.12c-.97 0-1.37 1.25-.58 1.81l3.64 2.6l-1.43 4.61c-.29.93.79 1.68 1.56 1.09l3.69-2.8l3.69 2.81c.77.59 1.85-.16 1.56-1.09l-1.43-4.61l3.64-2.6c.79-.57.39-1.81-.58-1.81h-4.45z" />
                           </svg>
                         </template>
-                      </div>
+                      </div> -->
                     </div>
                   </div>
                 </template>
@@ -107,11 +107,11 @@ onMounted(() => {
 }
 
 .knowTeacherContainer>section.knowTeacher>div.teachersList>div.category>div.teachersContainer>div.teacherAbout {
-  @apply flex flex-row gap-3 border border-black/10 rounded-xl p-2
+  @apply flex flex-row gap-3 border border-black/10 rounded-xl p-2 w-full
 }
 
 .knowTeacherContainer>section.knowTeacher>div.teachersList>div.category>div.teachersContainer>div.teacherAbout>div>img {
-  @apply rounded-full border border-black/25
+  @apply rounded-full border border-black/25 w-24 h-24
 }
 
 .knowTeacherContainer>section.knowTeacher>div.teachersList>div.category>div.teachersContainer>div.teacherAbout>div {
@@ -119,7 +119,7 @@ onMounted(() => {
 }
 
 .knowTeacherContainer>section.knowTeacher>div.teachersList>div.category>div.teachersContainer>div.teacherAbout>div.avatar {
-  @apply p-2 w-52 h-full flex items-center justify-center
+  @apply p-2 w-max h-full flex items-center justify-center
 }
 
 .knowTeacherContainer>section.knowTeacher>div.teachersList>div.category>div.teachersContainer>div.teacherAbout>div>h1 {

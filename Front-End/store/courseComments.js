@@ -13,18 +13,34 @@ export const useCourseCommentsStore = defineStore({
   },
 
   actions: {
-    fetchComments() {
+    async fetchComments(id) {
       this.comments = []
+      const token = localStorage.getItem("_gtk")
+      const target = localStorage.getItem("_gtt")
+      await fetch(`http://127.0.0.1:5000/comentarios?token=${token}&target=${target}&id=${id}`, {
+        method: "GET"
+      }).then(res=>res.json()).then(async res=>{
+        console.log(res)
+        for(const comment of res.comments){
+          await fetch(`http://127.0.0.1:5000/user?token=${token}&target=${target}&type=${comment[3]}&id=${comment[2]}`)
+          .then(resp=>resp.json()).then(resp=>{
+            this.comments.push({
+              user_id: comment[2],
+              comment_id: comment[0],
+              name: resp.name,
+              message: comment[4],
+              image: resp.avatar_url,
+              responses: []
+            })
+          })
+        }
+      })
     },
-    addComments(payload) {
-      this.comments.push({
-        user_id: 1223123123123,
-        comment_id: 989898951238594,
-        name: 'Luis Davi',
-        message: payload,
-        image: 'https://i.pinimg.com/originals/75/82/09/7582098de480133df2fed86d2de7637b.jpg',
-        created_at: 'Mon Aug 21 2023 21:45:53 GMT-0300 (Hora padrão de Brasília)',
-        responses: []
+    async addComments(course_id, payload) {
+      const token = localStorage.getItem("_gtk")
+      const target = localStorage.getItem("_gtt")
+      await fetch(`http://127.0.0.1:5000/registrarComentario?token=${token}&target=${target}&curso=${course_id}&mensagem=${payload}`, {
+        method: "POST",
       })
     },
     addResponse(payload){

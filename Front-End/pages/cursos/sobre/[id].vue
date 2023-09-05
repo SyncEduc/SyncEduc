@@ -8,19 +8,19 @@
           </div>
           <img :src="selectedCourse.image" :alt="selectedCourse.name">
           <img :src="selectedCourse.image" alt="" class="background">
-        <div>
+        <!-- <div>
           <span>Avaliações:</span>
           <svg v-for="star in selectedCourse.stars" :key="star" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
             viewBox="0 0 24 24">
             <path fill="currentColor"
               d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21L12 17.27z" />
           </svg>
-        </div>
-        <div>
+        </div> -->
+        <!-- <div>
           <img :src="selectedCourse.teacher.image">
           <div class="aboutTeacher">
             <span>{{ selectedCourse.teacher.name }}</span>
-            <p>{{ selectedCourse.teacher.desc }}</p>
+            <p>{{ selectedCourse.teacher.desc || 'Sem Descrição' }}</p>
             <div>
               <svg v-for="star in selectedCourse.teacher.stars" :key="star" xmlns="http://www.w3.org/2000/svg" width="32"
                 height="32" viewBox="0 0 24 24">
@@ -29,7 +29,7 @@
               </svg>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
       <div class="rightContent">
         <h1>{{ selectedCourse.name }}</h1>
@@ -37,14 +37,16 @@
         <div class="categories">
           <div v-for="(category, index) in selectedCourse.categories" :key="index">{{ category.name }}</div>
         </div>
-        <button @click="navigateTo(`/cursos/${selectedCourse.id}?aula=1`)">Inscrever-se</button>
+        <button @click="navigateTo(`/cursos/${selectedCourse.id}?aula=1`)">Inscreva-se! </button>
       </div>
       </div>
     </section>
   </NuxtLayout>
 </template>
 <script setup>
+import { useTeachersStore } from '~/store/teachers';
 import { useCourseStore } from '../../../store/courses'
+const teacherStore = useTeachersStore()
 const courseStore = useCourseStore()
 const route = useRoute()
 const backRoute = ()=> navigateTo('/cursos')
@@ -54,6 +56,7 @@ const selectedCourse = ref({
   image: '',
   id: 1,
   stars: 4,
+  teacherId: 0,
   teacher: {
     name: '',
     desc: '',
@@ -66,9 +69,14 @@ definePageMeta({
   middleware: ['03-class']
 })
 onMounted(() => {
+  courseStore.fetchCourses()
+  teacherStore.fetchTeachers()
   const findCourse = courseStore.getCoursesList.find(c=> c.id == route.params.id)
   if(courseStore.getCoursesList.length >=1 && findCourse){
     selectedCourse.value = findCourse
+    selectedCourse.value.teacher = teacherStore.teachers.find(t=>{
+      return selectedCourse.value.teacherId == t.id
+    })
   }else{
     courseStore.fetchCourses()
     if(courseStore.getCoursesList.find(c=> c.id == route.params.id)){
@@ -109,7 +117,9 @@ onMounted(() => {
 .rightContent{
   @apply pt-10
 }
-
+.detailsContainer>div>div>div{
+  @apply w-full
+}
 
 .detailsContainer>div>div>div>span {
   @apply text-xl
