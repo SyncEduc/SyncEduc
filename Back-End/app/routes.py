@@ -82,13 +82,13 @@ def login():
     email = request.args.get("email")
     senha = request.args.get("senha")
     opcao = request.args.get("opcao")
+    cursor = connection.cursor()
     if(opcao == "aluno"):
-        cursor.execute(f"SELECT * FROM tb_estudantes WHERE email = ?", [email])
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE email = '{email}'")
     elif(opcao == "professor"):
-        print("professor")
-        cursor.execute(f"SELECT * FROM tb_professores WHERE email = {email}")
+        cursor.execute(f"SELECT * FROM tb_professores WHERE email = '{email}'")
     else:
-        cursor.execute(f"SELECT * FROM tb_admin WHERE email = ?", [email])
+        cursor.execute(f"SELECT * FROM tb_admin WHERE email = '{email}'")
     rows = cursor.fetchall()
     valid = ''
     if(len(rows)==1):
@@ -166,7 +166,6 @@ def user():
         else:
             cursor.execute(f"SELECT * FROM tb_admin WHERE id = '{id}'")
         rows = cursor.fetchall()
-        print(rows)
         return {
             "avatar_url": rows[0][-2],
             "name": rows[0][1]
@@ -375,6 +374,53 @@ def comentarios():
         rows = cursor.fetchall()
         return {
             "comments": rows
+        }
+    else:
+        return {
+            "message": "token Invalido"
+        }
+    
+@app.route("/registrarResposta", methods=["POST"])
+def registrarResposta():
+    token = request.args.get('token') or ''
+    cursor = connection.cursor()
+    target = request.args.get("target") or ''
+    comentario_id = request.args.get("comment") or ''
+    mensagem = request.args.get("mensagem") or ''
+    if(target == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = '{token}'")
+    elif(target == "professor"):
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    else:
+        cursor.execute(f"SELECT * FROM tb_admin WHERE token = '{token}'")
+    user = cursor.fetchall()
+    if(len(user)==1):
+        cursor.execute("INSERT INTO tb_respostas (comentario_id, user_id, tipo, mensagem) values(?,?,?,?)", 
+        (f"{comentario_id}", f"{user[0][0]}", f"{target}", f"{mensagem}"))
+        connection.commit()
+        return {
+            "mensagem": "Resposta enviado com sucesso"
+        }
+    
+@app.route("/respostas")
+def respostas():
+    token = request.args.get('token') 
+    cursor = connection.cursor()
+    target = request.args.get("target") 
+    id = request.args.get("id") 
+    if(target == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = '{token}'")
+    elif(target == "professor"):
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    else:
+        cursor.execute(f"SELECT * FROM tb_admin WHERE token = '{token}'")
+    user = cursor.fetchall()
+    if(len(user)==1):
+        cursor = connection.cursor()
+        cursor.execute(f"SELECT * FROM tb_respostas WHERE comentario_id = {id}")
+        rows = cursor.fetchall()
+        return {
+            "responses": rows
         }
     else:
         return {

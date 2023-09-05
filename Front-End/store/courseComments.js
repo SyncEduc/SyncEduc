@@ -13,8 +13,9 @@ export const useCourseCommentsStore = defineStore({
   },
 
   actions: {
+    
     async fetchComments(id) {
-      this.comments = []
+      const cache = []
       const token = localStorage.getItem("_gtk")
       const target = localStorage.getItem("_gtt")
       await fetch(`http://127.0.0.1:5000/comentarios?token=${token}&target=${target}&id=${id}`, {
@@ -22,14 +23,32 @@ export const useCourseCommentsStore = defineStore({
       }).then(res=>res.json()).then(async res=>{
         for(const comment of res.comments){
           await fetch(`http://127.0.0.1:5000/user?token=${token}&target=${target}&type=${comment[3]}&id=${comment[2]}`)
-          .then(resp=>resp.json()).then(resp=>{
-            this.comments.push({
-              user_id: comment[2],
-              comment_id: comment[0],
-              name: resp.name,
-              message: comment[4],
-              image: resp.avatar_url,
-              responses: []
+          .then(resp=>resp.json()).then(async resp=>{
+            await fetch(`http://127.0.0.1:5000/respostas?token=${token}&target=${target}&id=${comment[0]}`).then(responses=>responses.json()).then(async responses=>{
+              let res = []
+              for(const response of responses.responses){
+                await fetch(`http://127.0.0.1:5000/user?token=${token}&target=${target}&type=${response[3]}&id=${response[2]}`)
+                .then(respData=> respData.json()).then(respData=>{
+                  res.push( {
+                    user_id: response[2],
+                    comment_id: response[1],
+                    name: respData.name,
+                    message: response[4],
+                    image: respData.avatar_url,
+                    type: response[3]
+                  })
+                })
+              }
+              cache.push({
+                user_id: comment[2],
+                comment_id: comment[0],
+                name: resp.name,
+                message: comment[4],
+                image: resp.avatar_url,
+                responses: res,
+                type: comment[3]
+              })
+              this.comments = cache
             })
           })
         }
@@ -39,23 +58,16 @@ export const useCourseCommentsStore = defineStore({
       const token = localStorage.getItem("_gtk")
       const target = localStorage.getItem("_gtt")
       await fetch(`http://127.0.0.1:5000/registrarComentario?token=${token}&target=${target}&curso=${course_id}&mensagem=${payload}`, {
-        method: "POST",
+        method: "POST"
       })
     },
-    addResponse(payload){
-      const item = this.comments.find(c => c.comment_id === payload.target)
-      this.comments = this.comments.map(c=>{
-        if(c.comment_id === item.comment_id){
-          item.responses.push({
-            user_id: 1223123123123,
-            comment_id: 98989891238594,
-            name: 'Luca alguma coisa',
-            message: payload.message,
-            image: 'https://i.pinimg.com/originals/75/82/09/7582098de480133df2fed86d2de7637b.jpg',
-            created_at: 'Mon Aug 21 2023 21:45:53 GMT-0300 (Hora padrão de Brasília)'
-          })
-          return item
-        }
+    async addResponse(comment_id, payload){
+      const token = localStorage.getItem("_gtk")
+      const target = localStorage.getItem("_gtt")
+      await fetch(`http://127.0.0.1:5000/registrarResposta?token=${token}&target=${target}&comment=${comment_id}&mensagem=${payload}`, {
+        method: "POST"
+      }).then(res=>res.json()).then(res=>{
+        console.log(res)
       })
     }
   }
