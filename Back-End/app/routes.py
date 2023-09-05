@@ -137,6 +137,40 @@ def usuario():
             "descricao": rows[0][5],
             "avatar_url": rows[0][6]
         }
+    
+
+@app.route("/user")
+def user():
+    token = request.args.get('token') or ''
+    cursor = connection.cursor()
+    target = request.args.get("target") or ''
+    type = request.args.get("type")
+    id = request.args.get("id") or ''
+    if(target == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_aluno WHERE token = '{token}'")
+    elif(target == "professor"):
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    else:
+        cursor.execute(f"SELECT * FROM tb_admin WHERE token = '{token}'")
+    user = cursor.fetchall()
+    if(len(user)==1):
+        if(type == "aluno"):
+            cursor.execute(f"SELECT * FROM tb_aluno WHERE id = '{id}'")
+        elif(type == "professor"):
+            cursor.execute(f"SELECT * FROM tb_professores WHERE id = '{id}'")
+        else:
+            cursor.execute(f"SELECT * FROM tb_admin WHERE id = '{id}'")
+        rows = cursor.fetchall()
+        print(rows)
+        return {
+            "avatar_url": rows[0][-2],
+            "name": rows[0][1]
+        }
+    else:
+        return {
+            "message": "token Invalido"
+        }
+        
         
 @app.route('/atualizarDado', methods=["POST"])
 def atualizarDado():
@@ -226,3 +260,116 @@ def professores():
     return {
         "teachers": teachers
     }
+
+@app.route("/registrarCurso", methods=["POST"])
+def registrarCurso():
+    token = request.args.get('token')
+    cursor.execute("SELECT * FROM tb_professores WHERE token = ?", [f"{token}"])
+    teacher = cursor.fetchall()
+    if(len(teacher)==1):
+        professor_id = teacher[0][0]
+        categoria_id = teacher[0][4]
+        titulo = request.args.get('title')
+        descricao = request.args.get('description')
+        banner_link = request.args.get('banner')
+        cursor.execute("INSERT INTO tb_cursos (professor_id, categoria_id, titulo, banner_link, descricao) values(?,?,?,?,?)",
+        (f"{professor_id}", f"{categoria_id}", f"{titulo}", f"{banner_link}", f"{descricao}"))
+        connection.commit()
+        cursor.execute("SELECT * FROM tb_cursos WHERE professor_id = ?", [f"{professor_id}"])
+        rows = cursor.fetchall()
+        if(len(rows)>=1):
+            return {
+                "course_info": rows[-1]
+            }
+        else:
+            return {
+                "message": "Erro interno"
+            }
+    else:
+        return {
+            "message": "Token invalido"
+        }
+    
+@app.route("/resgitrarAula", methods=["POST"])
+def resgitrarAula():
+    token = request.args.get('token')
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    teacher = cursor.fetchall()
+    
+    if(len(teacher)==1):
+        titulo = request.args.get("title")
+        link = request.args.get("link")
+        curso_id = request.args.get("curso")
+        cursor.execute("INSERT INTO tb_aulas (titulo, link, curso_id) values(?,?,?)", (f"{titulo}", f"{link}", f"{curso_id}"))
+        connection.commit()
+        return {
+            "message": "Aula cadastrada com sucesso!"
+        }
+    else:
+        return {
+            "message": "Token invalido"
+        }
+    
+@app.route("/cursos")
+def cursos():
+    cursor.execute("SELECT * FROM tb_cursos")
+    cursos = cursor.fetchall()
+    return {
+        "cursos": cursos
+    }
+
+@app.route("/aulas")
+def aulas():
+    cursor.execute("SELECT * FROM tb_aulas")
+    aulas = cursor.fetchall()
+    return {
+        "aulas": aulas
+    }
+
+@app.route("/registrarComentario", methods=["POST"])
+def registrarComentario():
+    token = request.args.get('token') or ''
+    cursor = connection.cursor()
+    target = request.args.get("target") or ''
+    curso_id = request.args.get("curso") or ''
+    mensagem = request.args.get("mensagem") or ''
+    if(target == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_aluno WHERE token = '{token}'")
+    elif(target == "professor"):
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    else:
+        cursor.execute(f"SELECT * FROM tb_admin WHERE token = '{token}'")
+    user = cursor.fetchall()
+    if(len(user)==1):
+        cursor.execute("INSERT INTO tb_comentarios (curso_id, user_id, tipo, mensagem) values(?,?,?,?)", 
+        (f"{curso_id}", f"{user[0][0]}", f"{target}", f"{mensagem}"))
+        connection.commit()
+        return {
+            "mensagem": "Comentário enviado com sucesso"
+        }
+    
+@app.route("/comentarios")
+def comentarios():
+    token = request.args.get('token') 
+    cursor = connection.cursor()
+    target = request.args.get("target") 
+    id = request.args.get("id") 
+    if(target == "aluno"):
+        cursor.execute(f"SELECT * FROM tb_aluno WHERE token = '{token}'")
+    elif(target == "professor"):
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    else:
+        cursor.execute(f"SELECT * FROM tb_admin WHERE token = '{token}'")
+    user = cursor.fetchall()
+    if(len(user)==1):
+        cursor = connection.cursor()
+        cursor.execute(f"SELECT * FROM tb_comentarios WHERE curso_id = {id}")
+        rows = cursor.fetchall()
+        return {
+            "comments": rows
+        }
+    else:
+        return {
+            "message": "token Invalido"
+        }
