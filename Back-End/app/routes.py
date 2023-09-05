@@ -121,12 +121,13 @@ def login():
 def usuario():
     tipo = request.args.get("tipo")
     token = request.args.get("token")
+    cursor = connection.cursor()
     if(tipo == "aluno"):
-        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = ?", [f"{token}"])
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = '{token}'")
     elif(tipo == "professor"):
-        cursor.execute(f"SELECT * FROM tb_professores WHERE token = ?", [f"{token}"])
+        cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'",)
     else:
-        cursor.execute(f"SELECT * FROM tb_admin WHERE token = ?", [f"{token}"])
+        cursor.execute(f"SELECT * FROM tb_admin WHERE token = '{token}'")
     rows = cursor.fetchall()
     if(len(rows)==1):
         return {
@@ -147,7 +148,7 @@ def user():
     type = request.args.get("type")
     id = request.args.get("id") or ''
     if(target == "aluno"):
-        cursor.execute(f"SELECT * FROM tb_aluno WHERE token = '{token}'")
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = '{token}'")
     elif(target == "professor"):
         cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
     else:
@@ -155,7 +156,7 @@ def user():
     user = cursor.fetchall()
     if(len(user)==1):
         if(type == "aluno"):
-            cursor.execute(f"SELECT * FROM tb_aluno WHERE id = '{id}'")
+            cursor.execute(f"SELECT * FROM tb_estudantes WHERE id = '{id}'")
         elif(type == "professor"):
             cursor.execute(f"SELECT * FROM tb_professores WHERE id = '{id}'")
         else:
@@ -313,6 +314,7 @@ def resgitrarAula():
     
 @app.route("/cursos")
 def cursos():
+    cursor = connection.cursor()
     cursor.execute("SELECT * FROM tb_cursos")
     cursos = cursor.fetchall()
     return {
@@ -321,6 +323,7 @@ def cursos():
 
 @app.route("/aulas")
 def aulas():
+    cursor = connection.cursor()
     cursor.execute("SELECT * FROM tb_aulas")
     aulas = cursor.fetchall()
     return {
@@ -335,7 +338,7 @@ def registrarComentario():
     curso_id = request.args.get("curso") or ''
     mensagem = request.args.get("mensagem") or ''
     if(target == "aluno"):
-        cursor.execute(f"SELECT * FROM tb_aluno WHERE token = '{token}'")
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = '{token}'")
     elif(target == "professor"):
         cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
     else:
@@ -356,7 +359,7 @@ def comentarios():
     target = request.args.get("target") 
     id = request.args.get("id") 
     if(target == "aluno"):
-        cursor.execute(f"SELECT * FROM tb_aluno WHERE token = '{token}'")
+        cursor.execute(f"SELECT * FROM tb_estudantes WHERE token = '{token}'")
     elif(target == "professor"):
         cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
     else:

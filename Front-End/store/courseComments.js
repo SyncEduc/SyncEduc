@@ -20,7 +20,6 @@ export const useCourseCommentsStore = defineStore({
       await fetch(`http://127.0.0.1:5000/comentarios?token=${token}&target=${target}&id=${id}`, {
         method: "GET"
       }).then(res=>res.json()).then(async res=>{
-        console.log(res)
         for(const comment of res.comments){
           await fetch(`http://127.0.0.1:5000/user?token=${token}&target=${target}&type=${comment[3]}&id=${comment[2]}`)
           .then(resp=>resp.json()).then(resp=>{

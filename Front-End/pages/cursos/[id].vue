@@ -66,6 +66,10 @@
               </div>
               <div class="commentContent">
                 <h1>{{ comment.name }}</h1>
+                <div v-if="comment.user_id == currentCourse.teacherId" class="w-max p-1 font-bold rounded-full text-white flex flex-row items-center gap-2 text-xs bg-[#858bfdff]">
+                  <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z"/></svg>
+                  <span>Professor(a)</span>
+                </div>
                 <p>{{ comment.message }}</p>
                 <p class="responseClick" @click="openReply(comment)" >Responder {{ comment.name }}</p>
                 <div class="comment" v-if="comment.comment_id == replyClick.id">
