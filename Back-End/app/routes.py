@@ -91,6 +91,7 @@ def login():
         cursor.execute(f"SELECT * FROM tb_admin WHERE email = '{email}'")
     rows = cursor.fetchall()
     valid = ''
+    print(rows)
     if(len(rows)==1):
         if(opcao == "aluno"):
             valid = bcrypt.check_password_hash(rows[0][4], senha)
@@ -102,6 +103,7 @@ def login():
         return {
             "message": "Dados invalidos"
         }
+    print(valid)
     if(len(rows) == 1):
         if(valid):
             return {

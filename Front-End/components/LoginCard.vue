@@ -99,7 +99,7 @@ async function sendForm(){
             }
           })
         }else{
-          await fetch(`http://127.0.0.1:5000/login?opcao=professor&email='${form.value.email}'&senha=${form.value.password}`, {
+          await fetch(`http://127.0.0.1:5000/login?opcao=professor&email=${form.value.email}&senha=${form.value.password}`, {
           method: "POST"
           }).then(res=> res.json()).then(async res=>{
             if(Object.keys(res).includes("message")){
