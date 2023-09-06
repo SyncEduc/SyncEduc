@@ -2,7 +2,7 @@
   <NuxtLayout name="nav">
     <div class="courseContainer">
       <section class="video realtive">
-        <iframe v-if="renderComponent" :src="currentCourse.lessons[currentLesson].videoSource" class="rounded-xl" width="100%" height="520" title="If I Had a Heart - Tal Barr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe v-if="renderComponent" :src="currentCourse.lessons[currentLesson].videoSource" class="rounded-xl h-[70vh]" width="100%" title="If I Had a Heart - Tal Barr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </section>
       <section class="aboutLesson">
         <div class="lessonInfos">

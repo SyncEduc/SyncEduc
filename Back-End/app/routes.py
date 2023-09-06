@@ -428,3 +428,22 @@ def respostas():
         return {
             "message": "token Invalido"
         }
+    
+
+
+@app.route("/deletearCurso", methods=["POST"])
+def deletarCurso():
+    token = request.args.get('token') 
+    id = request.args.get('id')
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
+    teacher = cursor.fetchall()
+    if(len(teacher) == 1):
+        cursor.execute(f"DELETE FROM tb_cursos WHERE id = {id}")
+        return{
+            "message": "Curso deletado com sucesso"
+        }
+    else:
+        return {
+            "message": "Token invalido"
+        }    

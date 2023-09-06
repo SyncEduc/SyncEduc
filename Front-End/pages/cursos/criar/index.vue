@@ -19,10 +19,23 @@
                 </div>
                 <button @click="addCourse()">Adicionar Curso</button>
             </div>
+            <div>
+                <template v-if="listCourses.length >=1" v-for="(item, index) in listCourses" :key="index">
+                    <Card :img="item.image" :categories="item.categories"  :id="item.id">
+                        <template #title>{{ item.name }}</template>
+                        <template #desc>{{ item.desc }}</template>
+                    </Card>
+                </template>
+            </div>
         </div>
     </NuxtLayout>
 </template>
 <script setup>
+import { useCourseStore } from '~/store/courses';
+import { useUserStudentStore } from '~/store/user';
+const listCourses = ref([])
+const userStore = useUserStudentStore()
+const courseStore = useCourseStore()
 const newLesson = ref({
     name: "",
     link: "",
@@ -60,6 +73,13 @@ async function addCourse(){
         }
     })
 }
+onMounted(async ()=>{
+    await courseStore.fetchCategories()
+    await courseStore.fetchCourses()
+    await userStore.getUser()
+    listCourses.value = courseStore.courses
+    console.log(listCourses.value)
+})
 </script>
 
 <style scoped>
