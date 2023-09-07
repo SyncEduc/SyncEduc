@@ -2,7 +2,7 @@
   <NuxtLayout name="nav">
     <div class="courseContainer">
       <section class="video realtive">
-        <iframe v-if="renderComponent" :src="currentCourse.lessons[currentLesson].videoSource" class="rounded-xl h-[70vh]" width="100%" title="If I Had a Heart - Tal Barr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+        <iframe v-if="renderComponent" :src="currentCourse.lessons[currentLesson].videoSource" class="rounded-xl h-[80vh]" width="100%" title="If I Had a Heart - Tal Barr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </section>
       <section class="aboutLesson">
         <div class="lessonInfos">
@@ -204,10 +204,17 @@ onMounted(async () => {
     return navigateTo(`/cursos/${route.params.id}?aula=1`)
   }
   currentCourse.value = courseStore.getCoursesList.find(c=> c.id == route.params.id)
-  renderComponent.value = true
   currentCourse.value.lessons = courseStore.getLessonByCourse(currentCourse.value.id)
+  currentCourse.value.lessons.map(lesson=>{
+    if(!lesson.videoSource.includes('embed')){
+      const url = lesson.videoSource.split('/')
+      lesson.videoSource = url[0] + '//' + url[1] + "youtube.com" + '/embed/' + url[3]
+      return lesson
+    }
+  })
   updateCurentLesson()
   commentsStore.fetchComments(currentCourse.value.id)
+  renderComponent.value = true
 })
 watch(newComment, () => {
   charLimit.value = 300 - newComment.value.length
