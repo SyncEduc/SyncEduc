@@ -2,7 +2,7 @@
   <div class="NavContainer">
     <Nav>
       <div class="SeparatorContainer">
-          <div>
+          <div @click="navigateTo('/')" class="cursor-pointer">
             <img src="../assets/images/HorizontalLogo.webp" class="w-[120px] h-[56px]"/>
           </div>
           <div class="NavPcResolution">

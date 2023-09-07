@@ -41,7 +41,7 @@
             <h1>{{ userStore.user.nome }}</h1>
             <div class="commentForm">
               <textarea maxlength="300" class="textComment" placeholder="Seu Comentário" v-model="newComment"></textarea>
-              <button class="submit" @click="sendComment">
+              <button class="submit border border-black" @click="sendComment">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                   <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                     stroke-width="2.5"
@@ -81,7 +81,7 @@
                   <div class="commentForm">
                     <textarea maxlength="300" class="textComment" placeholder="Seu Comentário"
                       v-model="newResponse"></textarea>
-                    <button class="submit" @click="sendResponse(comment.comment_id)">
+                    <button class="submit border border-black" @click="sendResponse(comment.comment_id)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                           stroke-width="2.5"
@@ -164,8 +164,8 @@ const charLimitResponse = ref(300)
 const charLimit = ref(300)
 const renderComponent = ref(false)
 
+
 function openReply(comment){
-  
   if(Object.keys(replyClick.value).length <=0){
     replyClick.value = {
       id: comment.comment_id,

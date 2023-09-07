@@ -73,17 +73,12 @@ export const useCourseCommentsStore = defineStore({
     async addComments(course_id, payload) {
       const token = localStorage.getItem("_gtk");
       const target = localStorage.getItem("_gtt");
-      console.log("awdawd");
       await fetch(
         `http://127.0.0.1:5000/registrarComentario?token=${token}&target=${target}&curso=${course_id}&mensagem=${payload}`,
         {
           method: "POST",
         }
       )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res);
-        });
     },
     async addResponse(comment_id, payload) {
       const token = localStorage.getItem("_gtk");
@@ -94,13 +89,8 @@ export const useCourseCommentsStore = defineStore({
           method: "POST",
         }
       )
-        .then((res) => res.json())
-        .then((res) => {
-          console.log(res);
-        });
-    },
   },
-});
+}});
 function teste(payload) {
   return payload;
 }
