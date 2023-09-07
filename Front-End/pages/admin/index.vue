@@ -1,12 +1,12 @@
 <template>
   <div class="adminContainer">
-    <LoginCard @get-data="getData"/>
+    <LoginCard @get-data="getData" :admin="true"/>
   </div>
 </template>
 <script setup>
-function getData(form){
-  console.log(form)
-}
+onMounted(()=>{
+  localStorage.setItem("_gtt", "admin")
+})
 </script>
 <style scoped>
 .adminContainer{

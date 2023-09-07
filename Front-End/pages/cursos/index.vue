@@ -31,10 +31,9 @@ const courseStore = useCourseStore()
 const categorySelected = ref({})
 const listCategories = ref([])
 const listCourses = ref([])
-
-onMounted(() => {
-  courseStore.fetchCategories()
-  courseStore.fetchCourses()
+onMounted(async () => {
+  await courseStore.fetchCategories()
+  await courseStore.fetchCourses()
   categorySelected.value = courseStore.getCategoriesList[0]
   listCategories.value = courseStore.getCategoriesList
   listCourses.value = courseStore.getCoursesList

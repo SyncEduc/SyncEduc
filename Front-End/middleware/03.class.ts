@@ -10,10 +10,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       if (Object.keys(to.query).includes("aula")) {
         return true;
       } else {
+        console.log("caiu id")
         return navigateTo("/cursos/" + to.params.id + "?aula=1");
       }
-    } else {
-      return navigateTo("/cursos/" + to.params.id + "?aula=1");
     }
   } else {
     return navigateTo('/cursos')

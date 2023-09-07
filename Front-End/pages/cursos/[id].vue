@@ -2,7 +2,7 @@
   <NuxtLayout name="nav">
     <div class="courseContainer">
       <section class="video realtive">
-        <VideoPlayer v-if="renderComponent" :source="currentCourse.lessons[currentLesson].videoSource" />
+        <iframe v-if="renderComponent" :src="currentCourse.lessons[currentLesson].videoSource" class="rounded-xl h-[70vh]" width="100%" title="If I Had a Heart - Tal Barr" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
       </section>
       <section class="aboutLesson">
         <div class="lessonInfos">
@@ -17,12 +17,6 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M5.5 15v-4.5H4V9h3v6H5.5ZM9 15v-2.5q0-.425.288-.713T10 11.5h2v-1H9V9h3.5q.425 0 .713.288T13.5 10v1.5q0 .425-.288.713t-.712.287h-2v1h3V15H9Zm6 0v-1.5h3v-1h-2v-1h2v-1h-3V9h3.5q.425 0 .713.288T19.5 10v4q0 .425-.288.713T18.5 15H15Z"/></svg>
             </div>
             <span>Aula N° {{ $route.query.aula }}</span>
-          </div>
-          <div class="check">
-            <div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="m10.6 13.8l-2.15-2.15q-.275-.275-.7-.275t-.7.275q-.275.275-.275.7t.275.7L9.9 15.9q.3.3.7.3t.7-.3l5.65-5.65q.275-.275.275-.7t-.275-.7q-.275-.275-.7-.275t-.7.275L10.6 13.8ZM12 22q-2.075 0-3.9-.788t-3.175-2.137q-1.35-1.35-2.137-3.175T2 12q0-2.075.788-3.9t2.137-3.175q1.35-1.35 3.175-2.137T12 2q2.075 0 3.9.788t3.175 2.137q1.35 1.35 2.138 3.175T22 12q0 2.075-.788 3.9t-2.137 3.175q-1.35 1.35-3.175 2.138T12 22Z"/></svg>
-            </div>
-            <span>Marcar como completa</span>
           </div>
           <div class="skip" :class="{'justify-end': $route.query.aula <=1, 'justify-between': $route.query.aula >=2}">
             
@@ -41,13 +35,13 @@
       <section class="commentsContainer">
         <div class="newComment">
           <div class="avatar">
-            <img src="https://i.pinimg.com/originals/75/82/09/7582098de480133df2fed86d2de7637b.jpg" />
+            <img :src="userStore.user.avatar_url" />
           </div>
           <div class="comment">
-            <h1>Luis Davi</h1>
+            <h1>{{ userStore.user.nome }}</h1>
             <div class="commentForm">
               <textarea maxlength="300" class="textComment" placeholder="Seu Comentário" v-model="newComment"></textarea>
-              <button class="submit">
+              <button class="submit" @click="sendComment">
                 <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                   <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                     stroke-width="2.5"
@@ -60,19 +54,34 @@
         </div>
         <div class="oldComments">
           <template v-for="comment in commentsStore.getCourseComments" :key="comment.comment_id">
-            <div class="comment">
+            <div class="comment border-b border-black/10 p-2">
               <div class="avatar">
                 <img :src="comment.image">
               </div>
               <div class="commentContent">
-                <h1>{{ comment.name }}</h1>
+                <h1 class="flex flex-row gap-2">
+                  <span>
+                    {{ comment.name }}
+                  </span>
+                    
+                
+                  <div v-if="comment.user_id == currentCourse.teacherId" class="w-max p-1 font-bold rounded-full text-white flex flex-row items-center gap-2 text-xs bg-[#858bfdff]">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z"/></svg>
+                    <span>Professor(a)</span>
+                  </div>
+                  <div  v-if="comment.type == 'admin'" class="w-max p-1 font-bold rounded-full text-white flex flex-row items-center gap-2 text-xs bg-[#4cd4a9]">
+                    <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z"/></svg>
+                    <span>Admin</span>
+                  </div>
+                </h1>
+                
                 <p>{{ comment.message }}</p>
                 <p class="responseClick" @click="openReply(comment)" >Responder {{ comment.name }}</p>
                 <div class="comment" v-if="comment.comment_id == replyClick.id">
                   <div class="commentForm">
                     <textarea maxlength="300" class="textComment" placeholder="Seu Comentário"
                       v-model="newResponse"></textarea>
-                    <button class="submit">
+                    <button class="submit" @click="sendResponse(comment.comment_id)">
                       <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24">
                         <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                           stroke-width="2.5"
@@ -89,7 +98,15 @@
                         <img :src="response.image">
                       </div>
                       <div class="commentContent">
-                        <h1>{{ response.name }}</h1>
+                        <h1 class="flex flex-row gap-2"><span>{{ response.name }}</span> <div v-if="response.user_id == currentCourse.teacherId" class="w-max p-1 font-bold rounded-full text-white flex flex-row items-center gap-2 text-xs bg-[#858bfdff]">
+                          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z"/></svg>
+                          <span>Professor(a)</span>
+                        </div>
+                        <div  v-if="response.type == 'admin'" class="w-max p-1 font-bold rounded-full text-white flex flex-row items-center gap-2 text-xs bg-[#4cd4a9]">
+                          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="currentColor" d="M9 16.17L4.83 12l-1.42 1.41L9 19L21 7l-1.41-1.41L9 16.17z"/></svg>
+                          <span>Admin</span>
+                        </div></h1>
+                        
                         <p class="userResponse">Respondeu: {{ comment.name }}</p>
                         <p>{{ response.message }}</p>
                       </div>
@@ -107,10 +124,11 @@
 <script setup>
 import { useCourseCommentsStore } from '~/store/courseComments'
 import { useCourseStore } from '~/store/courses'
+import { useUserStudentStore } from '~/store/user';
 
 const commentsStore = useCourseCommentsStore()
 const courseStore = useCourseStore()
-
+const userStore = useUserStudentStore()
 const route = useRoute()
 const currentLesson = ref(1)
 const currentCourse = ref({
@@ -133,8 +151,10 @@ function redirectUser(){
   }
 }
 
+
+
 definePageMeta({
-  middleware:'01-class'
+  middleware:["02-auth"]
 })
 
 const replyClick = ref({})
@@ -163,21 +183,31 @@ function openReply(comment){
 
 }
 
+async function sendComment(){
+  commentsStore.addComments(currentCourse.value.id,newComment.value)
+  commentsStore.fetchComments(currentCourse.value.id)
+}
+async function sendResponse(comment_id){
+  commentsStore.addResponse(comment_id, newResponse.value)
+  commentsStore.fetchComments(currentCourse.value.id)
+}
 async function updateCurentLesson(){
   currentLesson.value = route.query.aula -1
 }
 onUpdated(()=>{
   updateCurentLesson()
 })
-onMounted(() => {
-  courseStore.fetchCourses()
+onMounted(async () => {
+  await courseStore.fetchCourses()
+  await courseStore.fetchLessons()
   if(!(parseInt(route.query.aula) <= currentCourse.value.lessons.length)){
     return navigateTo(`/cursos/${route.params.id}?aula=1`)
   }
   currentCourse.value = courseStore.getCoursesList.find(c=> c.id == route.params.id)
   renderComponent.value = true
+  currentCourse.value.lessons = courseStore.getLessonByCourse(currentCourse.value.id)
   updateCurentLesson()
-  commentsStore.fetchComments()
+  commentsStore.fetchComments(currentCourse.value.id)
 })
 watch(newComment, () => {
   charLimit.value = 300 - newComment.value.length
