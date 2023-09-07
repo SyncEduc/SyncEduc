@@ -40,6 +40,7 @@
             <NavItem @click-action="redirect('/professores')">Conheça os professores</NavItem>
             <NavItem @click-action="redirect('/')">Inicio</NavItem>
             <NavItem v-if="_gtt == 'admin'" @click-action="redirect('/admin/config')">Admin</NavItem>
+            <NavItem v-if="_gtt == 'professor'" @click-action="redirect('/cursos/criar')">Gerenciar cursos</NavItem>
           </div>
       </div>
     </Nav>

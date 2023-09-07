@@ -17,11 +17,12 @@
                         <button @click="deleteLesson(lesson.id)"><svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24"><path fill="currentColor" d="M7 21q-.825 0-1.413-.588T5 19V6H4V4h5V3h6v1h5v2h-1v13q0 .825-.588 1.413T17 21H7ZM17 6H7v13h10V6ZM9 17h2V8H9v9Zm4 0h2V8h-2v9ZM7 6v13V6Z"/></svg></button>
                     </div>
                 </div>
+                <span class="w-full p-2 text-center bg-green-300/50 border border-green-700 text-green-700 rounded-lg font-bold opacity-80" v-if="message.length >=1">{{message}}</span>
                 <button @click="addCourse()">Adicionar Curso</button>
             </div>
-            <div>
+            <div class="oldCourse">
                 <template v-if="listCourses.length >=1" v-for="(item, index) in listCourses" :key="index">
-                    <Card :img="item.image" :categories="item.categories"  :id="item.id">
+                    <Card @deleteClick="deleteCourse(item.id)" v-if="item.teacherId == userStore.user.id" :showDeleteButton="item.teacherId == userStore.user.id" :img="item.image" :categories="item.categories" :id="item.id">
                         <template #title>{{ item.name }}</template>
                         <template #desc>{{ item.desc }}</template>
                     </Card>
@@ -36,6 +37,7 @@ import { useUserStudentStore } from '~/store/user';
 const listCourses = ref([])
 const userStore = useUserStudentStore()
 const courseStore = useCourseStore()
+const message = ref('')
 const newLesson = ref({
     name: "",
     link: "",
@@ -65,31 +67,47 @@ async function addCourse(){
         method: "POST"
     }).then(res=>res.json()).then(async res=>{
         for(const lesson of newLessonList.value){
-            console.log(lesson)
             await fetch(`http://127.0.0.1:5000/resgitrarAula?token=${token}&title=${lesson.name}&link=${encodeURIComponent(lesson.link)}&curso=${res.course_info[0]}`, {
                 method: "POST"
-            }).then(res=>res.json()).then(res=>console.log(res))
+            })
             continue
         }
     })
+    message.value = 'Curso adicionado com sucesso'
+    setTimeout(()=>{
+        message.value = ''
+    },5000)
+    await courseStore.fetchCourses()
+    listCourses.value = courseStore.courses
+}
+
+async function deleteCourse(id){
+    const token = localStorage.getItem("_gtk")
+    await fetch(`http://127.0.0.1:5000/deletarCurso?token=${token}&id=${id}`, {method:'POST'}).then(res=>res.json()).then(res=>{
+        console.log(res)
+    })
+    await courseStore.fetchCourses()
+    listCourses.value = courseStore.courses
 }
 onMounted(async ()=>{
     await courseStore.fetchCategories()
     await courseStore.fetchCourses()
     await userStore.getUser()
     listCourses.value = courseStore.courses
-    console.log(listCourses.value)
 })
 </script>
 
 <style scoped>
 .createCourseContainer{
-    @apply w-full min-h-screen p-6 pt-20 flex justify-center
+    @apply w-full min-h-screen p-6 pt-20 flex justify-start items-center flex-col gap-12
 }
 .createCourseContainer > .newCourse{
     @apply w-full max-w-[40rem] h-max 
     flex flex-row flex-wrap gap-6
     rounded-lg border border-black/20 p-4
+}
+.createCourseContainer > .oldCourse{
+    @apply flex flex-row gap-6 flex-wrap
 }
 .createCourseContainer > .newCourse > input, 
 .createCourseContainer > .newCourse > textarea{

@@ -133,12 +133,14 @@ def usuario():
     rows = cursor.fetchall()
     if(len(rows)==1):
         return {
+            "id": rows[0][0],
             "nome": rows[0][1],
             "email": rows[0][2],
             "nascimento": rows[0][3],
             "senha": rows[0][4],
             "descricao": rows[0][5],
-            "avatar_url": rows[0][6]
+            "avatar_url": rows[0][6],
+            
         }
     else:
         return {
@@ -170,7 +172,8 @@ def user():
         rows = cursor.fetchall()
         return {
             "avatar_url": rows[0][-2],
-            "name": rows[0][1]
+            "name": rows[0][1],
+            "id": rows[0][0]
         }
     else:
         return {
@@ -431,7 +434,7 @@ def respostas():
     
 
 
-@app.route("/deletearCurso", methods=["POST"])
+@app.route("/deletarCurso", methods=["POST"])
 def deletarCurso():
     token = request.args.get('token') 
     id = request.args.get('id')
@@ -439,7 +442,10 @@ def deletarCurso():
     cursor.execute(f"SELECT * FROM tb_professores WHERE token = '{token}'")
     teacher = cursor.fetchall()
     if(len(teacher) == 1):
-        cursor.execute(f"DELETE FROM tb_cursos WHERE id = {id}")
+        cursor.execute(f"DELETE FROM tb_cursos WHERE id = ?", [id])
+        connection.commit()
+        cursor.execute(f"DELETE FROM tb_aulas WHERE curso_id = ?", [id])
+        connection.commit()
         return{
             "message": "Curso deletado com sucesso"
         }
