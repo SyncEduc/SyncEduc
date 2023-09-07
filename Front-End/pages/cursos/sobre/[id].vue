@@ -1,5 +1,5 @@
 <template>
-  <NuxtLayout name="nav">
+  <NuxtLayout name="nav" v-if="renderPage">
     <section class="detailsContainer">
       <div>
         <div class="leftAboutCourse">
@@ -8,14 +8,7 @@
           </div>
           <img :src="selectedCourse.image" :alt="selectedCourse.name">
           <img :src="selectedCourse.image" alt="" class="background">
-        <!-- <div>
-          <span>Avaliações:</span>
-          <svg v-for="star in selectedCourse.stars" :key="star" xmlns="http://www.w3.org/2000/svg" width="32" height="32"
-            viewBox="0 0 24 24">
-            <path fill="currentColor"
-              d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2L9.19 8.63L2 9.24l5.46 4.73L5.82 21L12 17.27z" />
-          </svg>
-        </div> -->
+          <span class="text-lg font-bold">{{ courseStore.currentCountStudent }} Alunos inscritos</span>
         <div>
           <img :src="selectedCourse.teacher.image || ''">
           <div class="aboutTeacher">
@@ -36,7 +29,7 @@
         <div class="categories">
           <div v-for="(category, index) in selectedCourse.categories" :key="index">{{ category.name }}</div>
         </div>
-        <button @click="navigateTo(`/cursos/${selectedCourse.id}?aula=1`)">Inscreva-se! </button>
+        <button @click="subscribe">Inscreva-se! </button>
       </div>
       </div>
     </section>
@@ -45,10 +38,15 @@
 <script setup>
 import { useTeachersStore } from '~/store/teachers';
 import { useCourseStore } from '../../../store/courses'
+import { useLoginStore } from '~/store/login';
+import { useUserStudentStore } from '~/store/user';
+const userStore = useUserStudentStore()
+const loginStore = useLoginStore()
 const teacherStore = useTeachersStore()
 const courseStore = useCourseStore()
 const route = useRoute()
 const backRoute = ()=> navigateTo('/cursos')
+const renderPage = ref(false)
 const selectedCourse = ref({
   name: '',
   desc: '',
@@ -67,7 +65,18 @@ const selectedCourse = ref({
 definePageMeta({
   middleware: ['03-class']
 })
+
+async function subscribe(){
+  if(loginStore.isLogged){
+    await fetch(`http://127.0.0.1:5000/inscricao?curso=${selectedCourse.value.id}&user=${userStore.user.id}`, {
+      method: "POST"
+    }).then(res=> res.json()).then(res=> {
+      navigateTo(`/cursos/${selectedCourse.value.id}?aula=1`)
+    })
+  }
+}
 onMounted(async () => {
+  await courseStore.fetchCategories()
   await courseStore.fetchCourses()
   await teacherStore.fetchTeachers()
   const findCourse = courseStore.getCoursesList.find(c=> c.id == route.params.id)
@@ -76,12 +85,14 @@ onMounted(async () => {
     selectedCourse.value.teacher = teacherStore.teachers.find(t=>{
       return selectedCourse.value.teacherId == t.id
     })
+    await courseStore.fetchStudents(selectedCourse.value.id)
+    renderPage.value = true
   }else{
-    courseStore.fetchCourses()
+    await courseStore.fetchCourses()
     if(courseStore.getCoursesList.find(c=> c.id == route.params.id)){
       selectedCourse.value = courseStore.getCoursesList.find(c=> c.id == route.params.id)
     }else{
-      navigateTo('/cursos')
+      navigateTo("/cursos")
     }
   }
 })

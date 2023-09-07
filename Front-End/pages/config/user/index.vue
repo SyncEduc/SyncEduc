@@ -10,7 +10,8 @@
                     <template v-if="option.selected">
                         <ConfigurationProfile v-if="option.id == 1"/>
                         <ConfigurationPersonalData v-if="option.id ==2"/>
-                        <ConfigurationLogon v-if="option.id == 3"/>
+                        <ConfigurationCourses v-if="option.id == 3"/>
+                        <ConfigurationLogon v-if="option.id == 4"/>
                     </template>
                 </template>
             </div>
@@ -35,6 +36,11 @@ const options = ref([
     },
     {
         id: 3,
+        name: 'Cursos',
+        selected: false
+    },
+    {
+        id: 4,
         name: '⤶ Sair',
         selected: false
     }

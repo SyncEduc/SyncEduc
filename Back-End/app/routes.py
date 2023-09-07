@@ -452,4 +452,40 @@ def deletarCurso():
     else:
         return {
             "message": "Token invalido"
-        }    
+        } 
+
+@app.route("/inscricao", methods=["POST"])
+def inscricao():
+    curso_id = request.args.get("curso")
+    user_id = request.args.get("user")
+    cursor.execute("SELECT * FROM tb_inscricoes WHERE user_id = ? AND curso_id = ?", [user_id, curso_id])
+    rows = cursor.fetchall()
+    if(len(rows)!=1):
+        cursor.execute("INSERT INTO tb_inscricoes(user_id, curso_id) values(?,?)", (user_id, curso_id))
+        connection.commit()
+        return {
+            "message": "Usuário cadastrado com sucesso!"
+        }
+    else:
+        return{
+            "message": "Usuário já inscrito no curso"
+        }
+    
+@app.route("/alunosPorCurso")
+def alunosPorCurso():
+    curso_id = request.args.get("curso")
+    cursor.execute("SELECT * FROM tb_inscricoes WHERE curso_id = ?", [curso_id])
+    rows = cursor.fetchall()
+    return{
+        "students": rows
+    }
+
+@app.route("/cursoPorAluno")
+def cursoPorAluno():
+    user_id = request.args.get("user")
+    cursor.execute("SELECT * FROM tb_inscricoes WHERE user_id = ?", [user_id])
+    rows = cursor.fetchall()
+    return{
+        "students": rows
+    }
+    

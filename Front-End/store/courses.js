@@ -6,7 +6,8 @@ export const useCourseStore = defineStore({
     return {
       courses: [],
       categories: [],
-      lessons: []
+      lessons: [],
+      currentCountStudent: 0
     }
   },
 
@@ -51,6 +52,11 @@ export const useCourseStore = defineStore({
             videoSource: l[3] 
           }
         })
+      })
+    },
+    async fetchStudents(course_id){
+      await fetch(`http://127.0.0.1:5000/alunosPorCurso?curso=${course_id}`).then(res=> res.json()).then(res=>{
+        this.currentCountStudent = res.students.length
       })
     },
     getLessonByCourse(payload){

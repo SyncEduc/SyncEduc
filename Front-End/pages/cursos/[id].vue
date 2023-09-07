@@ -130,7 +130,7 @@ const commentsStore = useCourseCommentsStore()
 const courseStore = useCourseStore()
 const userStore = useUserStudentStore()
 const route = useRoute()
-const currentLesson = ref(1)
+const currentLesson = ref(0)
 const currentCourse = ref({
   lessons: [
     {
@@ -185,11 +185,11 @@ function openReply(comment){
 
 async function sendComment(){
   commentsStore.addComments(currentCourse.value.id,newComment.value)
-  commentsStore.fetchComments(currentCourse.value.id)
+  await commentsStore.fetchComments(currentCourse.value.id)
 }
 async function sendResponse(comment_id){
   commentsStore.addResponse(comment_id, newResponse.value)
-  commentsStore.fetchComments(currentCourse.value.id)
+  await commentsStore.fetchComments(currentCourse.value.id)
 }
 async function updateCurentLesson(){
   currentLesson.value = route.query.aula -1
@@ -204,6 +204,7 @@ onMounted(async () => {
     return navigateTo(`/cursos/${route.params.id}?aula=1`)
   }
   currentCourse.value = courseStore.getCoursesList.find(c=> c.id == route.params.id)
+  renderComponent.value = true
   currentCourse.value.lessons = courseStore.getLessonByCourse(currentCourse.value.id)
   currentCourse.value.lessons.map(lesson=>{
     if(!lesson.videoSource.includes('embed')){
@@ -213,8 +214,7 @@ onMounted(async () => {
     }
   })
   updateCurentLesson()
-  commentsStore.fetchComments(currentCourse.value.id)
-  renderComponent.value = true
+  await commentsStore.fetchComments(currentCourse.value.id)
 })
 watch(newComment, () => {
   charLimit.value = 300 - newComment.value.length

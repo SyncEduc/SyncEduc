@@ -83,9 +83,7 @@ async function addCourse(){
 
 async function deleteCourse(id){
     const token = localStorage.getItem("_gtk")
-    await fetch(`http://127.0.0.1:5000/deletarCurso?token=${token}&id=${id}`, {method:'POST'}).then(res=>res.json()).then(res=>{
-        console.log(res)
-    })
+    await fetch(`http://127.0.0.1:5000/deletarCurso?token=${token}&id=${id}`, {method:'POST'})
     await courseStore.fetchCourses()
     listCourses.value = courseStore.courses
 }
